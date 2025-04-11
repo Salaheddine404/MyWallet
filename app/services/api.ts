@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://192.168.1.29:8090/smartbranch/api/lib";
+const BASE_URL = "http://10.192.84.3:8090/smartbranch/api/lib";
 const HEADER = {
   header: {
     idmsg: "000000000104",
@@ -14,16 +14,33 @@ interface Card {
 }
 
 export async function fetchCardList(customerId: string): Promise<Card[]> {
-  // This is a mock implementation. Replace with your actual API call
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([
-        { card: "1234-5678-9012-3456" },
-        { card: "9876-5432-1098-7654" },
-        // Add more mock cards as needed
-      ]);
-    }, 1000);
-  });
+  try {
+    const response = await axios.post(`${BASE_URL}/cardlist`, {
+      ...HEADER,
+      filter: {
+        account: "",
+        card: "",
+        pan: "",
+        customer: customerId,
+        name_on_card: "",
+        institution: "7601",
+        start: "1",
+        end: "4",
+      },
+    });
+    console.log("API Response:", response.data); // Add this for debugging
+    return response.data.body.cards;
+  } catch (error) {
+    console.error("Error fetching cards:", error);
+    if (axios.isAxiosError(error)) {
+      console.error("Error details:", {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message
+      });
+    }
+    return [];
+  }
 }
 
 export const fetchCustomerProfile = async (customerId: string) => {
