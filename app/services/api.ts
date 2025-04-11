@@ -37,6 +37,19 @@ interface CustomerResponse {
   };
 }
 
+interface ChangeStatusRequest {
+  header: {
+    idmsg: string;
+    mac: string;
+  };
+  initiator: {
+    status: string;
+    expiry: string;
+    card: string;
+    institution: string;
+  };
+}
+
 export async function fetchCardList(customerId: string): Promise<Card[]> {
   try {
     const response = await axios.post(`${BASE_URL}/cardlist`, {
@@ -49,7 +62,7 @@ export async function fetchCardList(customerId: string): Promise<Card[]> {
         name_on_card: "",
         institution: "7601",
         start: "1",
-        end: "4",
+        end: "100",
       },
     });
     console.log("API Response:", response.data);
@@ -91,5 +104,57 @@ export async function fetchCustomerProfile(customerId: string): Promise<Customer
       });
     }
     return null;
+  }
+}
+
+export async function changeCardStatus(cardNumber: string, expiry: string, newStatus: string): Promise<boolean> {
+  try {
+    const requestBody = {
+      header: {
+        idmsg: "000000000104",
+        mac: "bcecfa664e12edca"
+      },
+      initiator: {
+        status: newStatus,
+        expiry: expiry,
+        card: cardNumber,
+        institution: "7601"
+      }
+    };
+
+    console.log('Sending status change request:', JSON.stringify(requestBody, null, 2));
+
+    const response = await axios.post(`${BASE_URL}/changestatus`, requestBody);
+    
+    console.log('Full response:', JSON.stringify(response.data, null, 2));
+
+    // Check if the response has the correct structure
+    if (!response.data || !response.data.body || !response.data.body.status) {
+      console.error('Invalid response structure:', response.data);
+      throw new Error('Invalid response structure from server');
+    }
+
+    // Log the complete status object
+    console.log('Status object:', response.data.body.status);
+
+    // Check for success
+    const success = response.data.body.status.errorcode === "000";
+    if (!success) {
+      console.error('Status change failed with error:', {
+        errorcode: response.data.body.status.errorcode,
+        errordesc: response.data.body.status.errordesc
+      });
+    }
+    return success;
+  } catch (error) {
+    console.error('Error changing card status:', error);
+    if (axios.isAxiosError(error)) {
+      console.error('Axios error details:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message
+      });
+    }
+    throw error;
   }
 }
