@@ -1,9 +1,9 @@
-import { View, Text, StyleSheet, ActivityIndicator, ScrollView, Image } from "react-native";
-import { useEffect, useState } from "react";
-import { useLocalSearchParams } from "expo-router";
-import { fetchCustomerProfile } from "../services/api";
-import { colors } from "../theme/colors";
-import { Ionicons } from "@expo/vector-icons";
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ActivityIndicator, ScrollView, Image } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
+import { fetchCustomerProfile } from '../services/api';
+import { colors } from '../theme/colors';
+import { Ionicons } from '@expo/vector-icons';
 
 interface Customer {
   customer: number;
@@ -22,32 +22,30 @@ export default function ProfileScreen() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function loadCustomerProfile() {
-      try {
-        setLoading(true);
-        setError(null);
-        const customerData = await fetchCustomerProfile(customerId as string);
-        
-        if (customerData) {
-          setCustomer(customerData);
-        } else {
-          setError("No customer profile found.");
-        }
-      } catch (err) {
-        setError("Failed to load customer profile. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    }
+    loadCustomerProfile();
+  }, []);
 
-    if (customerId) {
-      loadCustomerProfile();
+  const loadCustomerProfile = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const customerData = await fetchCustomerProfile();
+      if (customerData) {
+        setCustomer(customerData);
+      } else {
+        setError('No customer data found');
+      }
+    } catch (err) {
+      console.error('Error loading profile:', err);
+      setError('Failed to load customer profile');
+    } finally {
+      setLoading(false);
     }
-  }, [customerId]);
+  };
 
   if (loading) {
     return (
-      <View style={styles.centerContainer}>
+      <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={colors.primary} />
         <Text style={styles.loadingText}>Loading profile...</Text>
       </View>
@@ -56,8 +54,7 @@ export default function ProfileScreen() {
 
   if (error) {
     return (
-      <View style={styles.centerContainer}>
-        <Ionicons name="alert-circle" size={48} color={colors.status.error} />
+      <View style={styles.errorContainer}>
         <Text style={styles.errorText}>{error}</Text>
       </View>
     );
@@ -122,6 +119,29 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.background,
+  },
+  loadingText: {
+    marginTop: 10,
+    color: colors.text.primary,
+    fontSize: 16,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: colors.background,
+  },
+  errorText: {
+    color: colors.status.error,
+    fontSize: 16,
+    textAlign: 'center',
   },
   header: {
     backgroundColor: colors.primary,
@@ -193,23 +213,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.text.primary,
     fontWeight: "500",
-  },
-  centerContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-    backgroundColor: colors.background,
-  },
-  loadingText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: colors.text.secondary,
-  },
-  errorText: {
-    fontSize: 16,
-    color: colors.status.error,
-    textAlign: "center",
-    marginTop: 10,
   },
 }); 

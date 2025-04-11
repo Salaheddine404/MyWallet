@@ -82,28 +82,45 @@ export async function fetchCardList(customerId: string): Promise<Card[]> {
 
 export async function fetchCustomerProfile(customerId: string): Promise<Customer | null> {
   try {
-    const response = await axios.post<CustomerResponse>(`${BASE_URL}/customerlist`, {
+    console.log('Fetching customer profile for ID:', customerId);
+    
+    const response = await axios.post(`${BASE_URL}/customerlist`, {
       ...HEADER,
       filter: {
         customer: customerId,
-        nationalid: "",
         institution: "7601",
-        start: "0",
-        end: "100",
+        start: "1",
+        end: "1"
       },
     });
-    console.log("Customer API Response:", response.data);
-    return response.data.body.customers[0] || null;
+
+    console.log('Customer profile response:', response.data);
+
+    if (!response.data || !response.data.body || !response.data.body.customers || response.data.body.customers.length === 0) {
+      console.error('No customer data found in response');
+      return null;
+    }
+
+    const customerData = response.data.body.customers[0];
+    return {
+      customer: customerData.customer,
+      customerid: customerData.customerid,
+      firstnameen: customerData.firstnameen,
+      middnameen: customerData.middnameen,
+      lastnameen: customerData.lastnameen,
+      nationalid: customerData.nationalid,
+      birthdate: customerData.birthdate
+    };
   } catch (error) {
-    console.error("Error fetching customer profile:", error);
+    console.error('Error fetching customer profile:', error);
     if (axios.isAxiosError(error)) {
-      console.error("Error details:", {
+      console.error('Error details:', {
         status: error.response?.status,
         data: error.response?.data,
         message: error.message
       });
     }
-    return null;
+    throw error;
   }
 }
 
