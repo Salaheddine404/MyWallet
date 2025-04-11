@@ -13,6 +13,16 @@ interface Card {
   // Add other card properties as needed
 }
 
+interface Customer {
+  customer: string;
+  name: string;
+  nationalid?: string;
+  address?: string;
+  phone?: string;
+  email?: string;
+  // Add other customer properties as needed
+}
+
 export async function fetchCardList(customerId: string): Promise<Card[]> {
   try {
     const response = await axios.post(`${BASE_URL}/cardlist`, {
@@ -28,7 +38,7 @@ export async function fetchCardList(customerId: string): Promise<Card[]> {
         end: "4",
       },
     });
-    console.log("API Response:", response.data); // Add this for debugging
+    console.log("API Response:", response.data);
     return response.data.body.cards;
   } catch (error) {
     console.error("Error fetching cards:", error);
@@ -43,16 +53,29 @@ export async function fetchCardList(customerId: string): Promise<Card[]> {
   }
 }
 
-export const fetchCustomerProfile = async (customerId: string) => {
-  const response = await axios.post(`${BASE_URL}/customerlist`, {
-    ...HEADER,
-    filter: {
-      customer: customerId,
-      nationalid: "",
-      institution: "7601",
-      start: "0",
-      end: "100",
-    },
-  });
-  return response.data.body.customers[0];
-};
+export async function fetchCustomerProfile(customerId: string): Promise<Customer | null> {
+  try {
+    const response = await axios.post(`${BASE_URL}/customerlist`, {
+      ...HEADER,
+      filter: {
+        customer: customerId,
+        nationalid: "",
+        institution: "7601",
+        start: "0",
+        end: "100",
+      },
+    });
+    console.log("Customer API Response:", response.data);
+    return response.data.body.customers[0] || null;
+  } catch (error) {
+    console.error("Error fetching customer profile:", error);
+    if (axios.isAxiosError(error)) {
+      console.error("Error details:", {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message
+      });
+    }
+    return null;
+  }
+}
