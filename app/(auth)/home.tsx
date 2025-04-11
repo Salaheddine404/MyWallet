@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ActivityIndicator, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator, ScrollView, TouchableOpacity, Switch } from "react-native";
 import { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { fetchCardList } from "../services/api";
@@ -6,10 +6,10 @@ import { colors } from "../theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 
 interface Card {
-  cardno?: string;
-  cardtype?: string;
-  status?: string;
-  expirydate?: string;
+  pan?: string;
+  expiry?: string;
+  name_on_card?: string;
+  cardstatus?: string;
 }
 
 export default function HomeScreen() {
@@ -17,6 +17,7 @@ export default function HomeScreen() {
   const [cards, setCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showActive, setShowActive] = useState(true);
 
   useEffect(() => {
     async function loadCards() {
@@ -42,6 +43,10 @@ export default function HomeScreen() {
       loadCards();
     }
   }, [customerId]);
+
+  const filteredCards = cards.filter(card => 
+    showActive ? card.cardstatus === 'Active' : card.cardstatus === 'Deactivated'
+  );
 
   if (loading) {
     return (
@@ -69,39 +74,44 @@ export default function HomeScreen() {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>My Cards</Text>
         <Text style={styles.headerSubtitle}>Manage your payment cards</Text>
+        <View style={styles.switchContainer}>
+          <Text style={styles.switchLabel}>Show {showActive ? 'Active' : 'Deactivated'} Cards</Text>
+          <Switch
+            value={showActive}
+            onValueChange={setShowActive}
+            trackColor={{ false: colors.gray[400], true: colors.primary }}
+            thumbColor={colors.white}
+          />
+        </View>
       </View>
 
-      {cards.map((card, index) => (
-        <View key={index} style={styles.cardContainer}>
+      {filteredCards.map((card, index) => (
+        <View 
+          key={index} 
+          style={[
+            styles.cardContainer,
+            { backgroundColor: card.cardstatus === 'Active' ? colors.primary : colors.gray[400] }
+          ]}
+        >
           <View style={styles.cardHeader}>
             <Ionicons 
-              name={card.cardtype?.toLowerCase().includes('visa') ? 'logo-visa' : 'card'} 
+              name="card" 
               size={32} 
               color={colors.white} 
             />
-            <View style={styles.cardStatus}>
-              <View style={[
-                styles.statusDot,
-                { backgroundColor: card.status === 'ACTIVE' ? colors.status.success : colors.status.warning }
-              ]} />
-              <Text style={styles.statusText}>{card.status || 'UNKNOWN'}</Text>
-            </View>
           </View>
 
           <View style={styles.cardNumberContainer}>
             <Text style={styles.cardNumber}>
-              {card.cardno ? `•••• •••• •••• ${card.cardno.slice(-4)}` : '•••• •••• •••• ••••'}
+              {card.pan || '•••• •••• •••• ••••'}
             </Text>
+            <Text style={styles.cardName}>{card.name_on_card || 'Card Holder'}</Text>
           </View>
 
           <View style={styles.cardFooter}>
             <View style={styles.cardInfo}>
-              <Text style={styles.cardLabel}>Expires</Text>
-              <Text style={styles.cardValue}>{card.expirydate || 'N/A'}</Text>
-            </View>
-            <View style={styles.cardInfo}>
-              <Text style={styles.cardLabel}>Type</Text>
-              <Text style={styles.cardValue}>{card.cardtype || 'Unknown'}</Text>
+              <Text style={styles.cardLabel}>VALID THRU</Text>
+              <Text style={styles.cardValue}>{card.expiry || 'N/A'}</Text>
             </View>
           </View>
         </View>
@@ -140,70 +150,62 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     backgroundColor: colors.primary,
-    borderRadius: 15,
-    padding: 20,
+    borderRadius: 20,
+    padding: 25,
     margin: 15,
     marginTop: 10,
     shadowColor: colors.black,
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 4,
     },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 5,
+    minHeight: 220,
+    aspectRatio: 1.6,
+    width: '90%',
+    alignSelf: 'center',
   },
   cardHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  cardStatus: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: colors.white + "20",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 15,
-  },
-  statusDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginRight: 5,
-  },
-  statusText: {
-    color: colors.white,
-    fontSize: 12,
-    fontWeight: "500",
+    marginBottom: 40,
   },
   cardNumberContainer: {
-    marginBottom: 20,
+    marginBottom: 40,
+    alignItems: "center",
   },
   cardNumber: {
-    fontSize: 24,
+    fontSize: 28,
     color: colors.white,
-    letterSpacing: 2,
+    letterSpacing: 3,
     fontWeight: "bold",
+    marginBottom: 10,
+  },
+  cardName: {
+    fontSize: 16,
+    color: colors.white,
+    opacity: 0.8,
   },
   cardFooter: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
+    alignItems: "flex-end",
   },
   cardInfo: {
     flex: 1,
   },
   cardLabel: {
-    fontSize: 12,
+    fontSize: 10,
     color: colors.white,
     opacity: 0.7,
     marginBottom: 5,
+    letterSpacing: 1.5,
   },
   cardValue: {
     fontSize: 16,
     color: colors.white,
-    fontWeight: "500",
+    fontWeight: "bold",
+    letterSpacing: 1.5,
   },
   addCardButton: {
     flexDirection: "row",
@@ -257,5 +259,20 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 16,
     fontWeight: "bold",
+  },
+  switchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 15,
+    paddingHorizontal: 10,
+    backgroundColor: colors.white + '20',
+    borderRadius: 10,
+    padding: 10,
+  },
+  switchLabel: {
+    color: colors.white,
+    fontSize: 14,
+    fontWeight: '500',
   },
 }); 
