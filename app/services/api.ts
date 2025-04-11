@@ -14,13 +14,27 @@ interface Card {
 }
 
 interface Customer {
-  customer: string;
-  name: string;
-  nationalid?: string;
-  address?: string;
-  phone?: string;
-  email?: string;
-  // Add other customer properties as needed
+  customer: number;
+  customerid: string;
+  firstnameen: string;
+  middnameen: string;
+  lastnameen: string;
+  nationalid: string;
+  birthdate: string | null;
+}
+
+interface CustomerResponse {
+  header: {
+    idmsg: string;
+    mac: string;
+  };
+  body: {
+    customers: Customer[];
+    status: {
+      errorcode: string;
+      errordesc: string;
+    };
+  };
 }
 
 export async function fetchCardList(customerId: string): Promise<Card[]> {
@@ -55,7 +69,7 @@ export async function fetchCardList(customerId: string): Promise<Card[]> {
 
 export async function fetchCustomerProfile(customerId: string): Promise<Customer | null> {
   try {
-    const response = await axios.post(`${BASE_URL}/customerlist`, {
+    const response = await axios.post<CustomerResponse>(`${BASE_URL}/customerlist`, {
       ...HEADER,
       filter: {
         customer: customerId,

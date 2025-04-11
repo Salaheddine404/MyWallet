@@ -1,15 +1,16 @@
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator, ScrollView } from "react-native";
 import { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { fetchCustomerProfile } from "../services/api";
 
 interface Customer {
-  customer: string;
-  name: string;
-  nationalid?: string;
-  address?: string;
-  phone?: string;
-  email?: string;
+  customer: number;
+  customerid: string;
+  firstnameen: string;
+  middnameen: string;
+  lastnameen: string;
+  nationalid: string;
+  birthdate: string | null;
 }
 
 export default function ProfileScreen() {
@@ -63,41 +64,47 @@ export default function ProfileScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>Customer Profile</Text>
-      <View style={styles.infoContainer}>
-        <Text style={styles.label}>Customer ID:</Text>
-        <Text style={styles.value}>{customer?.customer}</Text>
-      </View>
-      <View style={styles.infoContainer}>
-        <Text style={styles.label}>Name:</Text>
-        <Text style={styles.value}>{customer?.name}</Text>
-      </View>
-      {customer?.nationalid && (
+      
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Basic Information</Text>
+        <View style={styles.infoContainer}>
+          <Text style={styles.label}>Customer ID:</Text>
+          <Text style={styles.value}>{customer?.customerid}</Text>
+        </View>
+        <View style={styles.infoContainer}>
+          <Text style={styles.label}>Customer Number:</Text>
+          <Text style={styles.value}>{customer?.customer}</Text>
+        </View>
         <View style={styles.infoContainer}>
           <Text style={styles.label}>National ID:</Text>
-          <Text style={styles.value}>{customer.nationalid}</Text>
+          <Text style={styles.value}>{customer?.nationalid}</Text>
         </View>
-      )}
-      {customer?.address && (
+        {customer?.birthdate && (
+          <View style={styles.infoContainer}>
+            <Text style={styles.label}>Birth Date:</Text>
+            <Text style={styles.value}>{customer.birthdate}</Text>
+          </View>
+        )}
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Name Information</Text>
         <View style={styles.infoContainer}>
-          <Text style={styles.label}>Address:</Text>
-          <Text style={styles.value}>{customer.address}</Text>
+          <Text style={styles.label}>First Name:</Text>
+          <Text style={styles.value}>{customer?.firstnameen}</Text>
         </View>
-      )}
-      {customer?.phone && (
         <View style={styles.infoContainer}>
-          <Text style={styles.label}>Phone:</Text>
-          <Text style={styles.value}>{customer.phone}</Text>
+          <Text style={styles.label}>Middle Name:</Text>
+          <Text style={styles.value}>{customer?.middnameen}</Text>
         </View>
-      )}
-      {customer?.email && (
         <View style={styles.infoContainer}>
-          <Text style={styles.label}>Email:</Text>
-          <Text style={styles.value}>{customer.email}</Text>
+          <Text style={styles.label}>Last Name:</Text>
+          <Text style={styles.value}>{customer?.lastnameen}</Text>
         </View>
-      )}
-    </View>
+      </View>
+    </ScrollView>
   );
 }
 
@@ -117,18 +124,35 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
+    textAlign: "center",
+  },
+  section: {
+    marginBottom: 20,
+    backgroundColor: "#f8f8f8",
+    padding: 15,
+    borderRadius: 10,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 15,
+    color: "#333",
   },
   infoContainer: {
     marginBottom: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+    paddingBottom: 10,
   },
   label: {
-    fontSize: 16,
+    fontSize: 14,
     color: "#666",
     marginBottom: 5,
   },
   value: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "500",
+    color: "#000",
   },
   loadingText: {
     marginTop: 10,
