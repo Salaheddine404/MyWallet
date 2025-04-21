@@ -32,7 +32,7 @@ export const CardFront: React.FC<CardFrontProps> = ({
       
       {/* Bank logo and wifi icon */}
       <View style={styles.header}>
-        <Text style={styles.bankName}>BOLT BANK</Text>
+        <Text style={styles.bankName}>MyBank</Text>
         <Ionicons name="wifi" size={24} color={colors.white} style={styles.wifiIcon} />
       </View>
       
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     width: '100%',
     aspectRatio: 1.6,
     borderRadius: 16,
-    padding: 20,
+    padding: 24,
     overflow: 'hidden',
     shadowColor: colors.black,
     shadowOffset: { width: 0, height: 4 },
@@ -89,12 +89,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 24,
   },
   bankName: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     color: colors.white,
-    letterSpacing: 1,
+    letterSpacing: 1.5,
   },
   wifiIcon: {
     opacity: 0.8,
@@ -102,23 +103,24 @@ const styles = StyleSheet.create({
   chipContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 30,
+    marginBottom: 32,
   },
   cardType: {
     marginLeft: 'auto',
     color: colors.white,
-    opacity: 0.8,
-    fontSize: 12,
-    letterSpacing: 2,
+    opacity: 0.9,
+    fontSize: 14,
+    letterSpacing: 2.5,
     textTransform: 'uppercase',
+    fontWeight: '600',
   },
   cardNumber: {
-    fontSize: 20,
+    fontSize: 24,
     color: colors.white,
-    letterSpacing: 2,
-    marginBottom: 30,
+    letterSpacing: 3,
+    marginBottom: 32,
     fontFamily: 'monospace',
+    fontWeight: '500',
   },
   footer: {
     flexDirection: 'row',
@@ -133,17 +135,19 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   label: {
-    fontSize: 10,
+    fontSize: 12,
     color: colors.white,
-    opacity: 0.8,
-    marginBottom: 4,
-    letterSpacing: 1,
+    opacity: 0.9,
+    marginBottom: 6,
+    letterSpacing: 1.5,
     textTransform: 'uppercase',
+    fontWeight: '500',
   },
   value: {
-    fontSize: 14,
+    fontSize: 16,
     color: colors.white,
-    fontWeight: '500',
+    fontWeight: '600',
     textTransform: 'uppercase',
+    letterSpacing: 1,
   },
 }); 

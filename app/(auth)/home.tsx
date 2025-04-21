@@ -71,10 +71,18 @@ export default function HomeScreen() {
 
     try {
       setUpdatingStatus(card.pan);
-      const status = newStatus ? "2" : "5";
+      const status = newStatus ? "2" : "3";
       const success = await changeCardStatus(card.pan, card.expiry, status);
+      
       if (success) {
-        await loadCards();
+        setCards(prevCards => 
+          prevCards.map(c => 
+            c.pan === card.pan 
+              ? { ...c, cardstatus: newStatus ? "Active" : "Deactivated" }
+              : c
+          )
+        );
+        
         Alert.alert(
           "Success",
           `Card has been ${newStatus ? "activated" : "deactivated"} successfully`
@@ -84,7 +92,7 @@ export default function HomeScreen() {
       }
     } catch (error) {
       console.error("Status change error:", error);
-      Alert.alert("Error", "Something went wrong.");
+      Alert.alert("Error", "Something went wrong. Please try again later.");
     } finally {
       setUpdatingStatus(null);
     }

@@ -145,15 +145,22 @@ export async function fetchCustomerProfile(customerId: string): Promise<Customer
 
 export async function changeCardStatus(cardNumber: string, expiry: string, newStatus: string): Promise<boolean> {
   try {
+    // Ensure we're using the complete PAN
+    const completePAN = cardNumber.replace(/\s/g, ''); // Remove any spaces from the PAN
+    console.log('Using complete PAN for status change:', completePAN);
+
+    // Map the status codes: 2 for activated, 3 for blocked
+    const statusCode = newStatus === "2" ? "2" : "3";
+
     const requestBody = {
       header: {
         idmsg: "000000000104",
         mac: "bcecfa664e12edca"
       },
       initiator: {
-        status: newStatus,
+        status: statusCode,
         expiry: expiry,
-        card: cardNumber,
+        card: completePAN,
         institution: "7601"
       }
     };
@@ -173,7 +180,7 @@ export async function changeCardStatus(cardNumber: string, expiry: string, newSt
     // Log the complete status object
     console.log('Status object:', response.data.body.status);
 
-    // Check for success
+    // Check for success (errorcode "000" means success)
     const success = response.data.body.status.errorcode === "000";
     if (!success) {
       console.error('Status change failed with error:', {
