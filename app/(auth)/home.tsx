@@ -5,7 +5,6 @@ import {
   ActivityIndicator,
   ScrollView,
   TouchableOpacity,
-  Switch,
   Alert,
   Animated,
 } from "react-native";
@@ -14,12 +13,15 @@ import { useLocalSearchParams } from "expo-router";
 import { fetchCardList, changeCardStatus } from "../services/api";
 import { colors } from "../theme/colors";
 import { Ionicons } from "@expo/vector-icons";
+import { CardFront } from "../components/CardFront";
+import { CardBack } from "../components/CardBack";
 
 interface Card {
   pan?: string;
   expiry?: string;
   name_on_card?: string;
   cardstatus?: string;
+  cvv?: string;
 }
 
 export default function HomeScreen() {
@@ -27,8 +29,8 @@ export default function HomeScreen() {
   const [cards, setCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showActive, setShowActive] = useState(true);
   const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
+  const [showBack, setShowBack] = useState<{ [key: string]: boolean }>({});
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -88,9 +90,12 @@ export default function HomeScreen() {
     }
   };
 
-  const filteredCards = cards.filter((card) =>
-    showActive ? card.cardstatus === "Active" : card.cardstatus === "Deactivated"
-  );
+  const toggleCardView = (cardPan: string) => {
+    setShowBack(prev => ({
+      ...prev,
+      [cardPan]: !prev[cardPan]
+    }));
+  };
 
   if (loading) {
     return (
@@ -118,77 +123,52 @@ export default function HomeScreen() {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>💳 My Cards</Text>
         <Text style={styles.headerSubtitle}>Manage your payment methods easily</Text>
-        <View style={styles.switchContainer}>
-          <Text style={styles.switchLabel}>
-            {showActive ? "Showing Active Cards" : "Showing Deactivated Cards"}
-          </Text>
-          <Switch
-            value={showActive}
-            onValueChange={setShowActive}
-            trackColor={{ false: "#ccc", true: colors.primary }}
-            thumbColor="#fff"
-          />
-        </View>
       </View>
 
       <Animated.View style={{ opacity: fadeAnim }}>
-        {filteredCards.map((card, index) => (
-          <View
+        {cards.map((card, index) => (
+          <TouchableOpacity
             key={index}
-            style={[
-              styles.cardContainer,
-              {
-                backgroundColor:
-                  card.cardstatus === "Active" ? colors.primary : colors.gray[400],
-              },
-            ]}
+            onPress={() => card.pan && toggleCardView(card.pan)}
+            style={styles.cardWrapper}
           >
-            <View style={styles.cardHeader}>
-              <Ionicons name="card-outline" size={30} color={colors.white} />
-              <View style={styles.statusSwitchContainer}>
-                <Text style={styles.statusLabel}>
-                  {card.cardstatus === "Active" ? "Active" : "Deactivated"}
-                </Text>
-                <TouchableOpacity
-                  style={[
-                    styles.lockButton,
-                    {
-                      backgroundColor:
-                        card.cardstatus === "Active" ? "#33AC2E" : "#e74c3c",
-                    },
-                  ]}
-                  onPress={() => handleStatusChange(card, card.cardstatus !== "Active")}
-                  disabled={updatingStatus === card.pan}
-                >
-                  {updatingStatus === card.pan ? (
-                    <ActivityIndicator size="small" color="#fff" />
-                  ) : (
-                    <Ionicons
-                      name={card.cardstatus === "Active" ? "lock-open" : "lock-closed"}
-                      size={20}
-                      color="#fff"
-                    />
-                  )}
-                </TouchableOpacity>
-              </View>
+            {showBack[card.pan || ''] ? (
+              <CardBack
+                cvv={card.cvv || 'XXX'}
+                isActive={card.cardstatus === "Active"}
+              />
+            ) : (
+              <CardFront
+                cardNumber={card.pan || ''}
+                cardHolder={card.name_on_card || ''}
+                expiryDate={card.expiry || ''}
+                isActive={card.cardstatus === "Active"}
+              />
+            )}
+            <View style={styles.cardActions}>
+              <TouchableOpacity
+                style={[
+                  styles.statusButton,
+                  {
+                    backgroundColor:
+                      card.cardstatus === "Active" ? "#33AC2E" : "#e74c3c",
+                  },
+                ]}
+                onPress={() => handleStatusChange(card, card.cardstatus !== "Active")}
+                disabled={updatingStatus === card.pan}
+              >
+                {updatingStatus === card.pan ? (
+                  <ActivityIndicator size="small" color="#fff" />
+                ) : (
+                  <Ionicons
+                    name={card.cardstatus === "Active" ? "lock-open" : "lock-closed"}
+                    size={20}
+                    color="#fff"
+                  />
+                )}
+              </TouchableOpacity>
             </View>
-
-            <View style={styles.cardNumberContainer}>
-              <Text style={styles.cardNumber}>
-                {card.pan || "•••• •••• •••• ••••"}
-              </Text>
-              <Text style={styles.cardName}>
-                {card.name_on_card || "Card Holder"}
-              </Text>
-            </View>
-
-            <View style={styles.cardFooter}>
-              <View style={styles.cardInfo}>
-                <Text style={styles.cardLabel}>VALID THRU</Text>
-                <Text style={styles.cardValue}>{card.expiry || "N/A"}</Text>
-              </View>
-            </View>
-          </View>
+          </TouchableOpacity>
         ))}
       </Animated.View>
 
@@ -223,74 +203,28 @@ const styles = StyleSheet.create({
     color: colors.white,
     opacity: 0.9,
   },
-  switchContainer: {
-    marginTop: 20,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: colors.white + "20",
-    padding: 10,
-    borderRadius: 15,
-  },
-  switchLabel: {
-    color: colors.white,
-    fontSize: 14,
-    fontWeight: "500",
-  },
-  cardContainer: {
-    borderRadius: 20,
-    padding: 25,
+  cardWrapper: {
     margin: 15,
     marginTop: 10,
+    position: 'relative',
+  },
+  cardActions: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    zIndex: 1,
+  },
+  statusButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
     shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 6,
-    minHeight: 200,
-    width: "90%",
-    alignSelf: "center",
-  },
-  cardHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 25,
-  },
-  cardNumberContainer: {
-    alignItems: "center",
-    marginBottom: 25,
-  },
-  cardNumber: {
-    fontSize: 26,
-    fontWeight: "bold",
-    color: colors.white,
-    letterSpacing: 2,
-    marginBottom: 10,
-  },
-  cardName: {
-    fontSize: 16,
-    color: colors.white,
-    opacity: 0.8,
-  },
-  cardFooter: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-end",
-  },
-  cardInfo: {
-    flex: 1,
-  },
-  cardLabel: {
-    fontSize: 12,
-    color: colors.white,
-    opacity: 0.7,
-    marginBottom: 4,
-    letterSpacing: 1.2,
-  },
-  cardValue: {
-    fontSize: 16,
-    color: colors.white,
-    fontWeight: "bold",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4,
   },
   addCardButton: {
     flexDirection: "row",
@@ -340,25 +274,5 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 16,
     fontWeight: "bold",
-  },
-  statusSwitchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: colors.white + "30",
-    padding: 8,
-    borderRadius: 15,
-  },
-  statusLabel: {
-    color: colors.white,
-    fontSize: 14,
-    fontWeight: "500",
-    marginRight: 10,
-  },
-  lockButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });
