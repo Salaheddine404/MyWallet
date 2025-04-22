@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, KeyboardAvoidingView, Platform } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ActivityIndicator } from "react-native";
 import { useState } from "react";
 import { router } from "expo-router";
 import { colors } from "../theme/colors";
@@ -6,18 +6,35 @@ import { Ionicons } from "@expo/vector-icons";
 
 export default function LoginScreen() {
   const [customerId, setCustomerId] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!customerId.trim()) {
       setError("Please enter your customer ID");
       return;
     }
+    if (password !== "1234") {
+      setError("Invalid password. Please use '1234'");
+      return;
+    }
+
     setError("");
-    router.push({
-      pathname: "/(auth)/home",
-      params: { customerId },
-    });
+    setIsLoading(true);
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 800));
+      router.push({
+        pathname: "/(auth)/home",
+        params: { customerId },
+      });
+    } catch (err) {
+      setError("An error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -25,36 +42,86 @@ export default function LoginScreen() {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
-      <View style={styles.header}>
-        <View style={styles.logoContainer}>
-          <Ionicons name="wallet" size={60} color={colors.white} />
-          <Text style={styles.appName}>MyWallet</Text>
+      <View style={styles.content}>
+        {/* Header Section */}
+        <View style={styles.header}>
+          <View style={styles.headerContent}>
+            <View style={styles.logoContainer}>
+              <Ionicons name="card" size={48} color={colors.white} />
+            </View>
+            <Text style={styles.welcomeTitle}>Welcome Back</Text>
+            <Text style={styles.welcomeSubtitle}>
+              Access your Bolt Bank card details
+            </Text>
+          </View>
         </View>
-        <Text style={styles.welcomeText}>Welcome to your digital banking</Text>
-      </View>
 
-      <View style={styles.formContainer}>
-        <View style={styles.inputContainer}>
-          <Ionicons name="person-circle" size={24} color={colors.gray[400]} style={styles.inputIcon} />
-          <TextInput
-            style={styles.input}
-            placeholder="Enter your customer ID"
-            placeholderTextColor={colors.gray[400]}
-            value={customerId}
-            onChangeText={setCustomerId}
-            keyboardType="numeric"
-            autoCapitalize="none"
-          />
+        {/* Form Section */}
+        <View style={styles.formContainer}>
+          <View style={styles.formContent}>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Customer ID</Text>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter your customer ID"
+                  placeholderTextColor={colors.gray[400]}
+                  value={customerId}
+                  onChangeText={(text) => {
+                    setCustomerId(text);
+                    setError("");
+                  }}
+                  keyboardType="numeric"
+                  autoCapitalize="none"
+                  autoFocus
+                />
+              </View>
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Password</Text>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter password (1234)"
+                  placeholderTextColor={colors.gray[400]}
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry
+                  autoCapitalize="none"
+                />
+              </View>
+            </View>
+
+            {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
+            <TouchableOpacity 
+              style={[styles.loginButton, isLoading && styles.loginButtonDisabled]} 
+              onPress={handleLogin}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <ActivityIndicator color={colors.white} />
+              ) : (
+                <>
+                  <Text style={styles.loginButtonText}>
+                    Continue
+                  </Text>
+                  <Ionicons name="arrow-forward" size={20} color={colors.white} />
+                </>
+              )}
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.forgotButton}>
+              <Text style={styles.forgotText}>
+                Forgot your Customer ID?
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-          <Text style={styles.loginButtonText}>Sign In</Text>
-          <Ionicons name="arrow-forward" size={24} color={colors.white} />
-        </TouchableOpacity>
-
-        <Text style={styles.helpText}>
-          Need help? Contact our support team
+        <Text style={styles.footerText}>
+          © 2025 Bolt Bank. All rights reserved.
         </Text>
       </View>
     </KeyboardAvoidingView>
@@ -66,6 +133,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
+  content: {
+    flex: 1,
+  },
   header: {
     backgroundColor: colors.primary,
     padding: 20,
@@ -73,57 +143,72 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
     alignItems: "center",
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  headerContent: {
+    alignItems: "center",
+    position: 'relative',
+    zIndex: 1,
   },
   logoContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     alignItems: "center",
+    justifyContent: "center",
     marginBottom: 20,
   },
-  appName: {
-    fontSize: 32,
+  welcomeTitle: {
+    fontSize: 28,
     fontWeight: "bold",
     color: colors.white,
-    marginTop: 10,
+    marginBottom: 8,
   },
-  welcomeText: {
-    fontSize: 18,
-    color: colors.white,
+  welcomeSubtitle: {
+    fontSize: 16,
+    color: 'rgba(255, 255, 255, 0.8)',
     textAlign: "center",
-    marginBottom: 20,
   },
   formContainer: {
     flex: 1,
+    backgroundColor: colors.white,
+    marginTop: -20,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
     padding: 20,
-    marginTop: 20,
+  },
+  formContent: {
+    flex: 1,
+  },
+  inputGroup: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: colors.text.primary,
+    marginBottom: 8,
   },
   inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
     backgroundColor: colors.white,
     borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.gray[200],
     paddingHorizontal: 15,
-    marginBottom: 15,
-    shadowColor: colors.black,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  inputIcon: {
-    marginRight: 10,
+    height: 50,
+    justifyContent: "center",
   },
   input: {
     flex: 1,
-    height: 50,
     fontSize: 16,
     color: colors.text.primary,
   },
   errorText: {
     color: colors.status.error,
-    marginBottom: 15,
     fontSize: 14,
+    marginBottom: 15,
   },
   loginButton: {
     backgroundColor: colors.primary,
@@ -133,25 +218,28 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 10,
-    shadowColor: colors.black,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
+  },
+  loginButtonDisabled: {
+    opacity: 0.7,
   },
   loginButtonText: {
     color: colors.white,
-    fontSize: 18,
-    fontWeight: "bold",
-    marginRight: 10,
+    fontSize: 16,
+    fontWeight: "600",
+    marginRight: 8,
   },
-  helpText: {
-    color: colors.text.secondary,
-    textAlign: "center",
+  forgotButton: {
     marginTop: 20,
+    alignItems: "center",
+  },
+  forgotText: {
+    color: colors.text.secondary,
     fontSize: 14,
+  },
+  footerText: {
+    color: 'rgba(255, 255, 255, 0.7)',
+    textAlign: "center",
+    fontSize: 12,
+    marginBottom: 20,
   },
 });
