@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, ScrollView, Image } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { fetchCustomerProfile } from '../services/api';
+import { fetchCustomerProfile } from '../services/profile';
 import { colors } from '../theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -16,23 +16,37 @@ interface Customer {
 }
 
 export default function ProfileScreen() {
-  const { customerId } = useLocalSearchParams();
+  const { customerId } = useLocalSearchParams<{ customerId: string }>();
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    loadCustomerProfile();
-  }, []);
+    console.log('Profile Screen mounted with customerId:', customerId);
+    
+    if (customerId) {
+      loadCustomerProfile();
+    } else {
+      console.error('No customerId provided');
+      setError('Customer ID is required');
+      setLoading(false);
+    }
+  }, [customerId]);
 
   const loadCustomerProfile = async () => {
+    console.log('Starting to load profile for customerId:', customerId);
     try {
       setLoading(true);
       setError(null);
-      const customerData = await fetchCustomerProfile();
+      console.log('Calling fetchCustomerProfile with customerId:', customerId);
+      const customerData = await fetchCustomerProfile(customerId);
+      console.log('Received customer data:', customerData);
+      
       if (customerData) {
+        console.log('Setting customer data:', customerData);
         setCustomer(customerData);
       } else {
+        console.log('No customer data received');
         setError('No customer data found');
       }
     } catch (err) {

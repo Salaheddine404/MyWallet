@@ -1,7 +1,7 @@
 import { View, FlatList, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import { fetchCardList } from "../services/api";
+import { fetchCardList } from "../services/cardlist";
 import CardItem from "../components/CardItem";
 import Navbar from "../components/Navbar";
 import { colors } from "../theme/colors";

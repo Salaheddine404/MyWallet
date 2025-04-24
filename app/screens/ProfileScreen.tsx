@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import { fetchCustomerProfile } from "../services/api";
+import { fetchCustomerProfile } from "../services/profile";
 
 export default function ProfileScreen() {
   const { customerId } = useLocalSearchParams();

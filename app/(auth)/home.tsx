@@ -9,14 +9,16 @@ import {
   Animated,
 } from "react-native";
 import { useEffect, useRef, useState } from "react";
-import { useLocalSearchParams } from "expo-router";
-import { fetchCardList, changeCardStatus } from "../services/api";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { fetchCardList } from "../services/cardlist";
+import { changeCardStatus } from "../services/status";
 import { colors } from "../theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { CardFront } from "../components/CardFront";
 import { CardBack } from "../components/CardBack";
 
 interface Card {
+  card: string;
   pan?: string;
   expiry?: string;
   name_on_card?: string;
@@ -25,7 +27,8 @@ interface Card {
 }
 
 export default function HomeScreen() {
-  const { customerId } = useLocalSearchParams();
+  const router = useRouter();
+  const { customerId } = useLocalSearchParams<{ customerId: string }>();
   const [cards, setCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -34,6 +37,15 @@ export default function HomeScreen() {
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
+    console.log('Home Screen mounted with customerId:', customerId);
+    
+    // If no customerId, redirect to login
+    if (!customerId) {
+      console.error('No customerId provided, redirecting to login');
+      router.replace('/');
+      return;
+    }
+
     loadCards();
   }, [customerId]);
 
@@ -49,7 +61,8 @@ export default function HomeScreen() {
     try {
       setLoading(true);
       setError(null);
-      const cardData = await fetchCardList(customerId as string);
+      console.log('Loading cards for customerId:', customerId);
+      const cardData = await fetchCardList(customerId);
       if (cardData && Array.isArray(cardData) && cardData.length > 0) {
         setCards(cardData);
       } else {

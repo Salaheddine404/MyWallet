@@ -1,8 +1,11 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
+import { useLocalSearchParams } from 'expo-router';
 
 export default function AuthLayout() {
+  const { customerId } = useLocalSearchParams();
+
   return (
     <Tabs
       screenOptions={{
@@ -29,6 +32,7 @@ export default function AuthLayout() {
             <Ionicons name="home-outline" size={size} color={color} />
           ),
         }}
+        initialParams={{ customerId }}
       />
       <Tabs.Screen
         name="profile"
@@ -38,6 +42,7 @@ export default function AuthLayout() {
             <Ionicons name="person-outline" size={size} color={color} />
           ),
         }}
+        initialParams={{ customerId }}
       />
       <Tabs.Screen
         name="settings"
@@ -47,6 +52,7 @@ export default function AuthLayout() {
             <Ionicons name="settings-outline" size={size} color={color} />
           ),
         }}
+        initialParams={{ customerId }}
       />
     </Tabs>
   );
