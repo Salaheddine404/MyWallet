@@ -35,6 +35,16 @@ export default function AuthLayout() {
         initialParams={{ customerId }}
       />
       <Tabs.Screen
+        name="request-card"
+        options={{
+          title: 'Request Card',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="card-outline" size={size} color={color} />
+          ),
+        }}
+        initialParams={{ customerId }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',

@@ -193,9 +193,15 @@ export default function HomeScreen() {
         ))}
       </Animated.View>
 
-      <TouchableOpacity style={styles.addCardButton}>
+      <TouchableOpacity 
+        style={styles.addCardButton}
+        onPress={() => router.push({
+          pathname: "/(auth)/request-card",
+          params: { customerId }
+        })}
+      >
         <Ionicons name="add-circle" size={24} color={colors.primary} />
-        <Text style={styles.addCardText}>Add New Card</Text>
+        <Text style={styles.addCardText}>Request New Card</Text>
       </TouchableOpacity>
     </ScrollView>
   );

@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
+import { router } from 'expo-router';
 
 export default function SettingsScreen() {
   const settingsOptions = [
@@ -33,6 +34,28 @@ export default function SettingsScreen() {
       ],
     },
   ];
+
+  const handleLogout = () => {
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to log out?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Logout',
+          style: 'destructive',
+          onPress: () => {
+            // Navigate to the login screen
+            router.replace('/');
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -68,10 +91,7 @@ export default function SettingsScreen() {
 
       <TouchableOpacity
         style={styles.logoutButton}
-        onPress={() => {
-          // Handle logout
-          console.log('Logout pressed');
-        }}
+        onPress={handleLogout}
       >
         <Ionicons name="log-out-outline" size={20} color={colors.status.error} />
         <Text style={styles.logoutText}>Log Out</Text>

@@ -16,7 +16,7 @@ export default function LoginScreen() {
       return;
     }
     if (password !== "1234") {
-      setError("Invalid password. Please use '1234'");
+      setError("Invalid password.");
       return;
     }
 
@@ -83,7 +83,7 @@ export default function LoginScreen() {
               <View style={styles.inputContainer}>
                 <TextInput
                   style={styles.input}
-                  placeholder="Enter password (1234)"
+                  placeholder="Enter password "
                   placeholderTextColor={colors.gray[400]}
                   value={password}
                   onChangeText={setPassword}
