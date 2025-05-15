@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, ScrollView, ImageBackground } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { fetchCustomerProfile } from '../services/profile';
 import { colors } from '../theme/colors';
@@ -59,86 +59,117 @@ export default function ProfileScreen() {
 
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={colors.primary} />
-        <Text style={styles.loadingText}>Loading profile...</Text>
-      </View>
+      <ImageBackground
+        source={require('../../assets/images/background.webp')}
+        style={styles.backgroundImage}
+      >
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.primary} />
+          <Text style={styles.loadingText}>Loading profile...</Text>
+        </View>
+      </ImageBackground>
     );
   }
 
   if (error) {
     return (
-      <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>{error}</Text>
-      </View>
+      <ImageBackground
+        source={require('../../assets/images/background.webp')}
+        style={styles.backgroundImage}
+      >
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{error}</Text>
+        </View>
+      </ImageBackground>
     );
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.avatarContainer}>
-          <View style={styles.avatar}>
-            <Ionicons name="person" size={40} color={colors.white} />
+    <ImageBackground
+      source={require('../../assets/images/background.webp')}
+      style={styles.backgroundImage}
+    >
+      <ScrollView style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.avatarContainer}>
+            <View style={styles.avatar}>
+              <Ionicons name="person" size={40} color={colors.white} />
+            </View>
           </View>
-        </View>
-        <Text style={styles.welcomeText}>Welcome back,</Text>
-        <Text style={styles.nameText}>
-          {customer?.firstnameen} {customer?.lastnameen}
-        </Text>
-      </View>
-
-      <View style={styles.card}>
-        <View style={styles.cardHeader}>
-          <Ionicons name="card" size={24} color={colors.primary} />
-          <Text style={styles.cardTitle}>Account Details</Text>
-        </View>
-        <View style={styles.infoContainer}>
-          <Text style={styles.label}>Customer ID</Text>
-          <Text style={styles.value}>{customer?.customerid}</Text>
-        </View>
-        <View style={styles.infoContainer}>
-          <Text style={styles.label}>Account Number</Text>
-          <Text style={styles.value}>{customer?.customer}</Text>
-        </View>
-        <View style={styles.infoContainer}>
-          <Text style={styles.label}>National ID</Text>
-          <Text style={styles.value}>{customer?.nationalid}</Text>
-        </View>
-      </View>
-
-      <View style={styles.card}>
-        <View style={styles.cardHeader}>
-          <Ionicons name="person-circle" size={24} color={colors.primary} />
-          <Text style={styles.cardTitle}>Personal Information</Text>
-        </View>
-        <View style={styles.infoContainer}>
-          <Text style={styles.label}>Full Name</Text>
-          <Text style={styles.value}>
-            {customer?.firstnameen} {customer?.middnameen} {customer?.lastnameen}
+          <Text style={styles.welcomeText}>Welcome back,</Text>
+          <Text style={styles.nameText}>
+            {customer?.firstnameen} {customer?.lastnameen}
           </Text>
         </View>
-        {customer?.birthdate && (
-          <View style={styles.infoContainer}>
-            <Text style={styles.label}>Date of Birth</Text>
-            <Text style={styles.value}>{customer.birthdate}</Text>
+
+        <View style={styles.card}>
+          <View style={styles.cardHeader}>
+            <Ionicons name="card" size={24} color={colors.primary} />
+            <Text style={styles.cardTitle}>Account Details</Text>
           </View>
-        )}
-      </View>
-    </ScrollView>
+          <View style={styles.infoContainer}>
+            <Text style={styles.label}>Customer ID</Text>
+            <Text style={styles.value}>{customer?.customerid}</Text>
+          </View>
+          <View style={styles.infoContainer}>
+            <Text style={styles.label}>Account Number</Text>
+            <Text style={styles.value}>{customer?.customer}</Text>
+          </View>
+          <View style={styles.infoContainer}>
+            <Text style={styles.label}>National ID</Text>
+            <Text style={styles.value}>{customer?.nationalid}</Text>
+          </View>
+        </View>
+
+        <View style={styles.card}>
+          <View style={styles.cardHeader}>
+            <Ionicons name="person-circle" size={24} color={colors.primary} />
+            <Text style={styles.cardTitle}>Personal Information</Text>
+          </View>
+          <View style={styles.infoContainer}>
+            <Text style={styles.label}>Full Name</Text>
+            <Text style={styles.value}>
+              {customer?.firstnameen} {customer?.middnameen} {customer?.lastnameen}
+            </Text>
+          </View>
+          {customer?.birthdate && (
+            <View style={styles.infoContainer}>
+              <Text style={styles.label}>Date of Birth</Text>
+              <Text style={styles.value}>{customer.birthdate}</Text>
+            </View>
+          )}
+        </View>
+      </ScrollView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: 'transparent',
+  },
+  scrollView: {
+    flex: 1,
+  },
+  header: {
+    backgroundColor: colors.primary,
+    padding: 20,
+    paddingTop: 50,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    opacity: 0.9,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.background,
+    backgroundColor: 'transparent',
   },
   loadingText: {
     marginTop: 10,
@@ -150,20 +181,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: colors.background,
+    backgroundColor: 'transparent',
   },
   errorText: {
     color: colors.status.error,
     fontSize: 16,
     textAlign: 'center',
-  },
-  header: {
-    backgroundColor: colors.primary,
-    padding: 20,
-    paddingTop: 40,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
-    alignItems: "center",
   },
   avatarContainer: {
     marginBottom: 15,
@@ -187,7 +210,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   card: {
-    backgroundColor: colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderRadius: 15,
     padding: 20,
     margin: 15,

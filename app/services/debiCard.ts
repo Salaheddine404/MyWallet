@@ -51,20 +51,22 @@ interface DebitCardResponse {
 
 export async function requestDebitCard(data: Omit<DebitCardRequest, 'header'>): Promise<DebitCardResponse> {
   try {
-    const requestData: DebitCardRequest = {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Return mock success response
+    return {
       header: {
         idmsg: "000000000104",
         mac: "bcecfa664e12edca"
       },
-      initiator: data
+      status: {
+        codeerror: "000",
+        codestatus: "2",
+        descstatus: "Success",
+        msgerror: ""
+      }
     };
-
-    const response = await axios.post(
-      'http://10.192.84.3:8090/smartbranch/api/lib/debitapplication',
-      requestData
-    );
-
-    return response.data;
   } catch (error) {
     console.error('Error requesting debit card:', error);
     throw error;

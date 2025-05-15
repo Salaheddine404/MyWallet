@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { fetchCardList } from "../services/cardlist";
 import CardItem from "../components/CardItem";
-import Navbar from "../components/Navbar";
 import { colors } from "../theme/colors";
 
 interface Card {
@@ -75,7 +74,6 @@ export default function HomeScreen() {
           }
         />
       </View>
-      <Navbar />
     </View>
   );
 }

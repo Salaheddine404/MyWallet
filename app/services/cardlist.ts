@@ -10,68 +10,50 @@ const HEADER = {
 
 interface Card {
   card: string;
-  // Add other card properties as needed
+  pan: string;
+  name_on_card: string;
+  status: string;
+  expiry_date: string;
+  card_type: string;
 }
 
-interface CardListResponse {
-  header: {
-    idmsg: string;
-    mac: string;
-  };
-  body: {
-    cards: Card[];
-    status: {
-      errorcode: string;
-      errordesc: string;
-    };
-  };
-}
+// Mock data for cards
+const MOCK_CARDS: Card[] = [
+  {
+    card: "CARD001",
+    pan: "4111********1111",
+    name_on_card: "JOHN DOE",
+    status: "ACTIVE",
+    expiry_date: "12/25",
+    card_type: "VISA"
+  },
+  {
+    card: "CARD002",
+    pan: "5111********2222",
+    name_on_card: "JOHN DOE",
+    status: "ACTIVE",
+    expiry_date: "09/24",
+    card_type: "MASTERCARD"
+  },
+  {
+    card: "CARD003",
+    pan: "6111********3333",
+    name_on_card: "JOHN DOE",
+    status: "INACTIVE",
+    expiry_date: "03/26",
+    card_type: "VISA"
+  }
+];
 
 export async function fetchCardList(customerId: string): Promise<Card[]> {
   try {
-    console.log('Fetching cards for customer:', customerId);
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 800));
     
-    const response = await axios.post<CardListResponse>(`${BASE_URL}/cardlist`, {
-      ...HEADER,
-      filter: {
-        account: "",
-        card: "",
-        pan: "",
-        customer: customerId,
-        name_on_card: "",
-        institution: "7601",
-        start: "1",
-        end: "100",
-      },
-    });
-
-    console.log("API Response:", response.data);
-
-    if (!response.data || !response.data.body) {
-      console.error("Invalid response structure:", response.data);
-      throw new Error("Invalid response from server");
-    }
-
-    if (response.data.body.status && response.data.body.status.errorcode !== "000") {
-      console.error("API returned error:", response.data.body.status);
-      throw new Error(response.data.body.status.errordesc || "Failed to fetch cards");
-    }
-
-    if (!response.data.body.cards) {
-      console.error("No cards array in response:", response.data);
-      return [];
-    }
-
-    return response.data.body.cards;
+    // Return mock data
+    return MOCK_CARDS;
   } catch (error) {
     console.error("Error fetching cards:", error);
-    if (axios.isAxiosError(error)) {
-      console.error("Error details:", {
-        status: error.response?.status,
-        data: error.response?.data,
-        message: error.message
-      });
-    }
     throw error;
   }
 } 

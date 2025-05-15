@@ -1,3 +1,5 @@
+import { Stack } from "expo-router";
+import { BackgroundImage } from "../components/BackgroundImage";
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
@@ -22,6 +24,7 @@ export default function AuthLayout() {
           fontSize: 12,
           fontWeight: '500',
         },
+        headerShown: false,
       }}
     >
       <Tabs.Screen
@@ -59,7 +62,7 @@ export default function AuthLayout() {
         options={{
           title: 'Settings',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="settings-outline" size={size} color={color} />
+            <Ionicons name="cog-outline" size={size} color={color} />
           ),
         }}
         initialParams={{ customerId }}

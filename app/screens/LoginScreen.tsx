@@ -1,3 +1,4 @@
+import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ActivityIndicator } from "react-native";
 import { useState } from "react";
 import { router } from "expo-router";
@@ -15,8 +16,8 @@ export default function LoginScreen() {
       setError("Please enter your customer ID");
       return;
     }
-    if (password !== "1234") {
-      setError("Invalid password.");
+    if (!password.trim()) {
+      setError("Please enter your password");
       return;
     }
 
@@ -24,13 +25,16 @@ export default function LoginScreen() {
     setIsLoading(true);
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 800));
+      // Log the credentials
+      console.log('Login attempt with:', { customerId, password });
+      
+      // Accept any input and navigate
       router.push({
         pathname: "/(auth)/home",
         params: { customerId },
       });
     } catch (err) {
+      console.error('Login error:', err);
       setError("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
@@ -43,24 +47,10 @@ export default function LoginScreen() {
       style={styles.container}
     >
       <View style={styles.content}>
-        {/* Header Section */}
-        <View style={styles.header}>
-          <View style={styles.headerContent}>
-            <View style={styles.logoContainer}>
-              <Ionicons name="card" size={48} color={colors.white} />
-            </View>
-            <Text style={styles.welcomeTitle}>Welcome Back</Text>
-            <Text style={styles.welcomeSubtitle}>
-              Access your Bolt Bank card details
-            </Text>
-          </View>
-        </View>
-
         {/* Form Section */}
         <View style={styles.formContainer}>
           <View style={styles.formContent}>
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Customer ID</Text>
               <View style={styles.inputContainer}>
                 <TextInput
                   style={styles.input}
@@ -79,11 +69,10 @@ export default function LoginScreen() {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Password</Text>
               <View style={styles.inputContainer}>
                 <TextInput
                   style={styles.input}
-                  placeholder="Enter password "
+                  placeholder="Enter password"
                   placeholderTextColor={colors.gray[400]}
                   value={password}
                   onChangeText={setPassword}
@@ -111,12 +100,6 @@ export default function LoginScreen() {
                 </>
               )}
             </TouchableOpacity>
-
-            <TouchableOpacity style={styles.forgotButton}>
-              <Text style={styles.forgotText}>
-                Forgot your Customer ID?
-              </Text>
-            </TouchableOpacity>
           </View>
         </View>
 
@@ -131,65 +114,31 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: 'transparent',
   },
   content: {
     flex: 1,
-  },
-  header: {
-    backgroundColor: colors.primary,
-    padding: 20,
-    paddingTop: 60,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
-    alignItems: "center",
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  headerContent: {
-    alignItems: "center",
-    position: 'relative',
-    zIndex: 1,
-  },
-  logoContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 20,
-  },
-  welcomeTitle: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: colors.white,
-    marginBottom: 8,
-  },
-  welcomeSubtitle: {
-    fontSize: 16,
-    color: 'rgba(255, 255, 255, 0.8)',
-    textAlign: "center",
+    justifyContent: 'center',
   },
   formContainer: {
-    flex: 1,
-    backgroundColor: colors.white,
-    marginTop: -20,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    marginHorizontal: 20,
+    borderRadius: 20,
     padding: 20,
+    shadowColor: colors.black,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   formContent: {
-    flex: 1,
+    width: '100%',
   },
   inputGroup: {
     marginBottom: 20,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: colors.text.primary,
-    marginBottom: 8,
   },
   inputContainer: {
     backgroundColor: colors.white,
@@ -209,6 +158,7 @@ const styles = StyleSheet.create({
     color: colors.status.error,
     fontSize: 14,
     marginBottom: 15,
+    textAlign: 'center',
   },
   loginButton: {
     backgroundColor: colors.primary,
@@ -228,18 +178,10 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginRight: 8,
   },
-  forgotButton: {
-    marginTop: 20,
-    alignItems: "center",
-  },
-  forgotText: {
-    color: colors.text.secondary,
-    fontSize: 14,
-  },
   footerText: {
     color: 'rgba(255, 255, 255, 0.7)',
     textAlign: "center",
     fontSize: 12,
-    marginBottom: 20,
+    marginTop: 20,
   },
 });

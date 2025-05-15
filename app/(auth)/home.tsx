@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
   Animated,
+  ImageBackground,
 } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -19,287 +20,273 @@ import { CardBack } from "../components/CardBack";
 
 interface Card {
   card: string;
-  pan?: string;
-  expiry?: string;
-  name_on_card?: string;
-  cardstatus?: string;
-  cvv?: string;
+  pan: string;
+  name_on_card: string;
+  status: string;
+  expiry_date: string;
+  card_type: string;
 }
 
 export default function HomeScreen() {
   const router = useRouter();
   const { customerId } = useLocalSearchParams<{ customerId: string }>();
   const [cards, setCards] = useState<Card[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
-  const [showBack, setShowBack] = useState<{ [key: string]: boolean }>({});
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const [isLoading, setIsLoading] = useState(true);
+  const [flippedCards, setFlippedCards] = useState<{ [key: string]: boolean }>({});
+  const flipAnimations = useRef<{ [key: string]: Animated.Value }>({});
 
   useEffect(() => {
-    console.log('Home Screen mounted with customerId:', customerId);
-    
-    // If no customerId, redirect to login
-    if (!customerId) {
-      console.error('No customerId provided, redirecting to login');
-      router.replace('/');
-      return;
-    }
-
     loadCards();
-  }, [customerId]);
+  }, []);
 
-  useEffect(() => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 600,
+  const loadCards = async () => {
+    try {
+      const data = await fetchCardList(customerId);
+      setCards(data);
+      // Initialize animations for each card
+      data.forEach(card => {
+        flipAnimations.current[card.card] = new Animated.Value(0);
+      });
+    } catch (error) {
+      console.error("Error loading cards:", error);
+      Alert.alert("Error", "Failed to load cards. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const toggleCard = (cardId: string) => {
+    setFlippedCards(prev => ({
+      ...prev,
+      [cardId]: !prev[cardId]
+    }));
+
+    Animated.spring(flipAnimations.current[cardId], {
+      toValue: flippedCards[cardId] ? 0 : 1,
+      friction: 12,
+      tension: 40,
       useNativeDriver: true,
     }).start();
-  }, [cards]);
+  };
 
-  async function loadCards() {
+  const handleStatusChange = async (card: Card) => {
     try {
-      setLoading(true);
-      setError(null);
-      console.log('Loading cards for customerId:', customerId);
-      const cardData = await fetchCardList(customerId);
-      if (cardData && Array.isArray(cardData) && cardData.length > 0) {
-        setCards(cardData);
-      } else {
-        setError("No cards found for this account.");
-      }
-    } catch (err) {
-      console.error("Error loading cards:", err);
-      setError("Failed to load cards. Please try again later.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  const handleStatusChange = async (card: Card, newStatus: boolean) => {
-    if (!card.pan || !card.expiry) {
-      Alert.alert("Error", "Missing card information");
-      return;
-    }
-
-    try {
-      setUpdatingStatus(card.pan);
-      const status = newStatus ? "2" : "3";
-      const success = await changeCardStatus(card.pan, card.expiry, status);
+      const newStatus = card.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+      const success = await changeCardStatus(card.pan, card.expiry_date, newStatus);
       
       if (success) {
         setCards(prevCards => 
           prevCards.map(c => 
-            c.pan === card.pan 
-              ? { ...c, cardstatus: newStatus ? "Active" : "Deactivated" }
-              : c
+            c.card === card.card ? { ...c, status: newStatus } : c
           )
         );
-        
-        Alert.alert(
-          "Success",
-          `Card has been ${newStatus ? "activated" : "deactivated"} successfully`
-        );
-      } else {
-        Alert.alert("Error", "Failed to change card status. Please try again.");
       }
     } catch (error) {
-      console.error("Status change error:", error);
-      Alert.alert("Error", "Something went wrong. Please try again later.");
-    } finally {
-      setUpdatingStatus(null);
+      console.error("Error changing card status:", error);
+      Alert.alert("Error", "Failed to change card status. Please try again.");
     }
   };
 
-  const toggleCardView = (cardPan: string) => {
-    setShowBack(prev => ({
-      ...prev,
-      [cardPan]: !prev[cardPan]
-    }));
-  };
-
-  if (loading) {
+  if (isLoading) {
     return (
-      <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color={colors.primary} />
-        <Text style={styles.loadingText}>Loading your cards...</Text>
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={styles.centerContainer}>
-        <Ionicons name="alert-circle" size={48} color={colors.status.error} />
-        <Text style={styles.errorText}>{error}</Text>
-        <TouchableOpacity style={styles.retryButton} onPress={loadCards}>
-          <Text style={styles.retryButtonText}>Try Again</Text>
-        </TouchableOpacity>
-      </View>
+      <ImageBackground
+        source={require('../../assets/images/background.webp')}
+        style={styles.backgroundImage}
+      >
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.primary} />
+        </View>
+      </ImageBackground>
     );
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>💳 My Cards</Text>
-        <Text style={styles.headerSubtitle}>Manage your payment methods easily</Text>
+    <ImageBackground
+      source={require('../../assets/images/background.webp')}
+      style={styles.backgroundImage}
+    >
+      <View style={styles.container}>
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>My Cards</Text>
+          </View>
+
+          <View style={styles.cardsContainer}>
+            {cards.map((card) => (
+              <View key={card.card} style={styles.cardWrapper}>
+                <View style={styles.cardContainer}>
+                  <TouchableOpacity
+                    onPress={() => toggleCard(card.card)}
+                    activeOpacity={0.9}
+                  >
+                    <Animated.View
+                      style={[
+                        styles.card,
+                        {
+                          transform: [
+                            {
+                              rotateY: flipAnimations.current[card.card]?.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: ['0deg', '180deg']
+                              })
+                            },
+                            {
+                              perspective: 1000
+                            }
+                          ]
+                        }
+                      ]}
+                    >
+                      <Animated.View
+                        style={[
+                          styles.cardFace,
+                          {
+                            backfaceVisibility: 'hidden',
+                            transform: [
+                              {
+                                rotateY: flipAnimations.current[card.card]?.interpolate({
+                                  inputRange: [0, 1],
+                                  outputRange: ['0deg', '180deg']
+                                })
+                              }
+                            ]
+                          }
+                        ]}
+                      >
+                        <CardFront 
+                          cardNumber={card.pan}
+                          cardHolder={card.name_on_card}
+                          expiryDate={card.expiry_date}
+                          isActive={card.status === 'ACTIVE'}
+                        />
+                      </Animated.View>
+                      <Animated.View
+                        style={[
+                          styles.cardFace,
+                          styles.cardBack,
+                          {
+                            backfaceVisibility: 'hidden',
+                            transform: [
+                              {
+                                rotateY: flipAnimations.current[card.card]?.interpolate({
+                                  inputRange: [0, 1],
+                                  outputRange: ['180deg', '360deg']
+                                })
+                              }
+                            ]
+                          }
+                        ]}
+                      >
+                        <CardBack 
+                          cvv="XXX"
+                          isActive={card.status === 'ACTIVE'}
+                        />
+                      </Animated.View>
+                    </Animated.View>
+                  </TouchableOpacity>
+                </View>
+                
+                <View style={styles.cardControls}>
+                  <TouchableOpacity
+                    style={[styles.controlButton, card.status === 'ACTIVE' ? styles.activeButton : styles.inactiveButton]}
+                    onPress={() => handleStatusChange(card)}
+                  >
+                    <Ionicons 
+                      name={card.status === 'ACTIVE' ? 'power' : 'power-outline'} 
+                      size={20} 
+                      color={colors.white} 
+                    />
+                    <Text style={styles.controlButtonText}>
+                      {card.status === 'ACTIVE' ? 'Active' : 'Inactive'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ))}
+          </View>
+        </ScrollView>
       </View>
-
-      <Animated.View style={{ opacity: fadeAnim }}>
-        {cards.map((card, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => card.pan && toggleCardView(card.pan)}
-            style={styles.cardWrapper}
-          >
-            {showBack[card.pan || ''] ? (
-              <CardBack
-                cvv={card.cvv || 'XXX'}
-                isActive={card.cardstatus === "Active"}
-              />
-            ) : (
-              <CardFront
-                cardNumber={card.pan || ''}
-                cardHolder={card.name_on_card || ''}
-                expiryDate={card.expiry || ''}
-                isActive={card.cardstatus === "Active"}
-              />
-            )}
-            <View style={styles.cardActions}>
-              <TouchableOpacity
-                style={[
-                  styles.statusButton,
-                  {
-                    backgroundColor:
-                      card.cardstatus === "Active" ? "#33AC2E" : "#e74c3c",
-                  },
-                ]}
-                onPress={() => handleStatusChange(card, card.cardstatus !== "Active")}
-                disabled={updatingStatus === card.pan}
-              >
-                {updatingStatus === card.pan ? (
-                  <ActivityIndicator size="small" color="#fff" />
-                ) : (
-                  <Ionicons
-                    name={card.cardstatus === "Active" ? "lock-open" : "lock-closed"}
-                    size={20}
-                    color="#fff"
-                  />
-                )}
-              </TouchableOpacity>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </Animated.View>
-
-      <TouchableOpacity 
-        style={styles.addCardButton}
-        onPress={() => router.push({
-          pathname: "/(auth)/request-card",
-          params: { customerId }
-        })}
-      >
-        <Ionicons name="add-circle" size={24} color={colors.primary} />
-        <Text style={styles.addCardText}>Request New Card</Text>
-      </TouchableOpacity>
-    </ScrollView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: 'transparent',
   },
-  header: {
-    padding: 20,
-    paddingTop: 50,
-    backgroundColor: colors.primary,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+  scrollView: {
+    flex: 1,
   },
-  headerTitle: {
-    fontSize: 30,
-    fontWeight: "bold",
-    color: colors.white,
-    marginBottom: 6,
-  },
-  headerSubtitle: {
-    fontSize: 16,
-    color: colors.white,
-    opacity: 0.9,
-  },
-  cardWrapper: {
-    margin: 15,
-    marginTop: 10,
-    position: 'relative',
-  },
-  cardActions: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    zIndex: 1,
-  },
-  statusButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+  loadingContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 4,
+    backgroundColor: 'transparent',
   },
-  addCardButton: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: colors.white,
-    borderRadius: 12,
-    padding: 15,
-    margin: 15,
-    shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 5,
-    elevation: 4,
-  },
-  addCardText: {
-    color: colors.primary,
-    fontSize: 16,
-    fontWeight: "600",
-    marginLeft: 10,
-  },
-  centerContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: colors.background,
-    padding: 20,
-  },
-  loadingText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: colors.text.secondary,
-  },
-  errorText: {
-    fontSize: 16,
-    color: colors.status.error,
-    textAlign: "center",
-    marginTop: 10,
-  },
-  retryButton: {
+  header: {
     backgroundColor: colors.primary,
-    borderRadius: 10,
-    padding: 12,
-    marginTop: 20,
+    padding: 20,
+    paddingTop: 50,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    opacity: 0.9,
   },
-  retryButtonText: {
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
     color: colors.white,
-    fontSize: 16,
-    fontWeight: "bold",
+  },
+  cardsContainer: {
+    padding: 15,
+  },
+  cardWrapper: {
+    marginBottom: 20,
+  },
+  cardContainer: {
+    marginBottom: 10,
+  },
+  card: {
+    width: '100%',
+    aspectRatio: 1.6,
+  },
+  cardFace: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    backfaceVisibility: 'hidden',
+  },
+  cardBack: {
+    transform: [{ rotateY: '180deg' }],
+  },
+  cardControls: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+  },
+  controlButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 8,
+    minWidth: 100,
+    justifyContent: 'center',
+  },
+  activeButton: {
+    backgroundColor: colors.primary,
+  },
+  inactiveButton: {
+    backgroundColor: colors.gray[400],
+  },
+  controlButtonText: {
+    color: colors.white,
+    marginLeft: 5,
+    fontSize: 14,
+    fontWeight: '500',
   },
 });

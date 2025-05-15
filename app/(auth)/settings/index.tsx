@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, ImageBackground } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
+import { colors } from '../../theme/colors';
 import { router } from 'expo-router';
 
 export default function SettingsScreen() {
@@ -20,7 +20,6 @@ export default function SettingsScreen() {
       icon: 'card-outline',
       options: [
         { label: 'Card Limits', icon: 'speedometer-outline' },
-        { label: 'Transaction History', icon: 'time-outline' },
         { label: 'Card Controls', icon: 'settings-outline' },
       ],
     },
@@ -58,59 +57,72 @@ export default function SettingsScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Settings</Text>
-      </View>
-
-      {settingsOptions.map((section, index) => (
-        <View key={index} style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Ionicons name={section.icon as any} size={24} color={colors.primary} />
-            <Text style={styles.sectionTitle}>{section.title}</Text>
-          </View>
-          
-          {section.options.map((option, optionIndex) => (
-            <TouchableOpacity
-              key={optionIndex}
-              style={styles.optionItem}
-              onPress={() => {
-                // Handle option press
-                console.log(`Pressed ${option.label}`);
-              }}
-            >
-              <View style={styles.optionContent}>
-                <Ionicons name={option.icon as any} size={20} color={colors.text.primary} />
-                <Text style={styles.optionLabel}>{option.label}</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={20} color={colors.gray[400]} />
-            </TouchableOpacity>
-          ))}
+    <ImageBackground
+      source={require('../../../assets/images/background.webp')}
+      style={styles.backgroundImage}
+    >
+      <ScrollView style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Settings</Text>
         </View>
-      ))}
 
-      <TouchableOpacity
-        style={styles.logoutButton}
-        onPress={handleLogout}
-      >
-        <Ionicons name="log-out-outline" size={20} color={colors.status.error} />
-        <Text style={styles.logoutText}>Log Out</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        {settingsOptions.map((section, index) => (
+          <View key={index} style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Ionicons name={section.icon as any} size={24} color={colors.primary} />
+              <Text style={styles.sectionTitle}>{section.title}</Text>
+            </View>
+            
+            {section.options.map((option, optionIndex) => (
+              <TouchableOpacity
+                key={optionIndex}
+                style={styles.optionItem}
+                onPress={() => {
+                  console.log(`Pressed ${option.label}`);
+                }}
+              >
+                <View style={styles.optionContent}>
+                  <Ionicons name={option.icon as any} size={20} color={colors.text.primary} />
+                  <Text style={styles.optionLabel}>{option.label}</Text>
+                </View>
+                <Ionicons name="chevron-forward" size={20} color={colors.gray[400]} />
+              </TouchableOpacity>
+            ))}
+          </View>
+        ))}
+
+        <TouchableOpacity
+          style={styles.logoutButton}
+          onPress={handleLogout}
+        >
+          <Ionicons name="log-out-outline" size={20} color={colors.status.error} />
+          <Text style={styles.logoutText}>Log Out</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: 'transparent',
+  },
+  scrollView: {
+    flex: 1,
   },
   header: {
+    backgroundColor: colors.primary,
     padding: 20,
     paddingTop: 50,
-    backgroundColor: colors.primary,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
+    opacity: 0.9,
   },
   headerTitle: {
     fontSize: 30,
@@ -119,7 +131,7 @@ const styles = StyleSheet.create({
   },
   section: {
     marginTop: 20,
-    backgroundColor: colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderRadius: 15,
     marginHorizontal: 15,
     padding: 10,
