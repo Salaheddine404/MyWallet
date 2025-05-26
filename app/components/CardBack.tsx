@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface CardBackProps {
   cvv: string;
@@ -13,10 +14,12 @@ export const CardBack: React.FC<CardBackProps> = ({
   isActive = true,
 }) => {
   return (
-    <View style={[
-      styles.container,
-      { backgroundColor: isActive ? colors.primary : colors.gray[400] }
-    ]}>
+    <LinearGradient
+      colors={isActive ? colors.primaryGradient : colors.secondaryGradient}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.container}
+    >
       {/* Magnetic stripe */}
       <View style={styles.magneticStripe} />
       
@@ -45,7 +48,11 @@ export const CardBack: React.FC<CardBackProps> = ({
           Use of this card is subject to the cardholder agreement.
         </Text>
       </View>
-    </View>
+
+      {/* Decorative circles */}
+      <View style={styles.decorativeCircle1} />
+      <View style={styles.decorativeCircle2} />
+    </LinearGradient>
   );
 };
 
@@ -53,13 +60,13 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     aspectRatio: 1.6,
-    borderRadius: 16,
+    borderRadius: 20,
     overflow: 'hidden',
     shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
+    shadowRadius: 12,
+    elevation: 12,
   },
   magneticStripe: {
     width: '100%',
@@ -122,6 +129,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
     letterSpacing: 0.5,
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   termsText: {
     color: colors.white,
@@ -129,5 +139,26 @@ const styles = StyleSheet.create({
     fontSize: 10,
     lineHeight: 12,
     letterSpacing: 0.3,
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+  },
+  decorativeCircle1: {
+    position: 'absolute',
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    top: -100,
+    right: -100,
+  },
+  decorativeCircle2: {
+    position: 'absolute',
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    bottom: -75,
+    left: -75,
   },
 }); 

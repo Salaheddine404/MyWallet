@@ -11,18 +11,23 @@ export default function AuthLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.gray[400],
+        tabBarActiveTintColor: colors.black,
+        tabBarInactiveTintColor: colors.gray[600],
         tabBarStyle: {
-          backgroundColor: colors.white,
-          borderTopWidth: 1,
-          borderTopColor: colors.gray[200],
+          backgroundColor: '#1693e9',
+          borderTopWidth: 0,
           height: 60,
           paddingBottom: 8,
+          paddingTop: 8,
+          elevation: 8,
+          shadowColor: colors.black,
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 4,
         },
         tabBarLabelStyle: {
           fontSize: 12,
-          fontWeight: '500',
+          fontWeight: '600',
         },
         headerShown: false,
       }}
@@ -58,7 +63,7 @@ export default function AuthLayout() {
         initialParams={{ customerId }}
       />
       <Tabs.Screen
-        name="settings"
+        name="settings-screen"
         options={{
           title: 'Settings',
           tabBarIcon: ({ color, size }) => (

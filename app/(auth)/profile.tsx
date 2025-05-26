@@ -90,54 +90,56 @@ export default function ProfileScreen() {
       style={styles.backgroundImage}
     >
       <ScrollView style={styles.container}>
-        <View style={styles.header}>
-          <View style={styles.avatarContainer}>
-            <View style={styles.avatar}>
-              <Ionicons name="person" size={40} color={colors.white} />
+        <View style={styles.section}>
+          <View style={styles.profileHeader}>
+            <View style={styles.avatarContainer}>
+              <View style={styles.avatar}>
+                <Ionicons name="person" size={40} color={colors.white} />
+              </View>
             </View>
-          </View>
-          <Text style={styles.welcomeText}>Welcome back,</Text>
-          <Text style={styles.nameText}>
-            {customer?.firstnameen} {customer?.lastnameen}
-          </Text>
-        </View>
-
-        <View style={styles.card}>
-          <View style={styles.cardHeader}>
-            <Ionicons name="card" size={24} color={colors.primary} />
-            <Text style={styles.cardTitle}>Account Details</Text>
-          </View>
-          <View style={styles.infoContainer}>
-            <Text style={styles.label}>Customer ID</Text>
-            <Text style={styles.value}>{customer?.customerid}</Text>
-          </View>
-          <View style={styles.infoContainer}>
-            <Text style={styles.label}>Account Number</Text>
-            <Text style={styles.value}>{customer?.customer}</Text>
-          </View>
-          <View style={styles.infoContainer}>
-            <Text style={styles.label}>National ID</Text>
-            <Text style={styles.value}>{customer?.nationalid}</Text>
-          </View>
-        </View>
-
-        <View style={styles.card}>
-          <View style={styles.cardHeader}>
-            <Ionicons name="person-circle" size={24} color={colors.primary} />
-            <Text style={styles.cardTitle}>Personal Information</Text>
-          </View>
-          <View style={styles.infoContainer}>
-            <Text style={styles.label}>Full Name</Text>
-            <Text style={styles.value}>
-              {customer?.firstnameen} {customer?.middnameen} {customer?.lastnameen}
+            <Text style={styles.welcomeText}>Welcome back,</Text>
+            <Text style={styles.nameText}>
+              {customer?.firstnameen} {customer?.lastnameen}
             </Text>
           </View>
-          {customer?.birthdate && (
-            <View style={styles.infoContainer}>
-              <Text style={styles.label}>Date of Birth</Text>
-              <Text style={styles.value}>{customer.birthdate}</Text>
+
+          <View style={styles.card}>
+            <View style={styles.cardHeader}>
+              <Ionicons name="card" size={24} color={colors.primary} />
+              <Text style={styles.cardTitle}>Account Details</Text>
             </View>
-          )}
+            <View style={styles.infoContainer}>
+              <Text style={styles.label}>Customer ID</Text>
+              <Text style={styles.value}>{customer?.customerid}</Text>
+            </View>
+            <View style={styles.infoContainer}>
+              <Text style={styles.label}>Account Number</Text>
+              <Text style={styles.value}>{customer?.customer}</Text>
+            </View>
+            <View style={styles.infoContainer}>
+              <Text style={styles.label}>National ID</Text>
+              <Text style={styles.value}>{customer?.nationalid}</Text>
+            </View>
+          </View>
+
+          <View style={styles.card}>
+            <View style={styles.cardHeader}>
+              <Ionicons name="person-circle" size={24} color={colors.primary} />
+              <Text style={styles.cardTitle}>Personal Information</Text>
+            </View>
+            <View style={styles.infoContainer}>
+              <Text style={styles.label}>Full Name</Text>
+              <Text style={styles.value}>
+                {customer?.firstnameen} {customer?.middnameen} {customer?.lastnameen}
+              </Text>
+            </View>
+            {customer?.birthdate && (
+              <View style={styles.infoContainer}>
+                <Text style={styles.label}>Date of Birth</Text>
+                <Text style={styles.value}>{customer.birthdate}</Text>
+              </View>
+            )}
+          </View>
         </View>
       </ScrollView>
     </ImageBackground>
@@ -148,45 +150,15 @@ const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
     width: '100%',
-    height: '100%',
   },
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
   },
-  scrollView: {
-    flex: 1,
-  },
-  header: {
-    backgroundColor: colors.primary,
+  section: {
     padding: 20,
-    paddingTop: 50,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
-    opacity: 0.9,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-  },
-  loadingText: {
-    marginTop: 10,
-    color: colors.text.primary,
-    fontSize: 16,
-  },
-  errorContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-    backgroundColor: 'transparent',
-  },
-  errorText: {
-    color: colors.status.error,
-    fontSize: 16,
-    textAlign: 'center',
+  profileHeader: {
+    marginBottom: 20,
   },
   avatarContainer: {
     marginBottom: 15,
@@ -210,11 +182,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   card: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: '#4b71b4',
     borderRadius: 15,
     padding: 20,
-    margin: 15,
-    marginTop: 10,
+    marginBottom: 15,
     shadowColor: colors.black,
     shadowOffset: {
       width: 0,
@@ -232,23 +203,47 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: colors.text.primary,
+    color: colors.white,
     marginLeft: 10,
   },
   infoContainer: {
     marginBottom: 15,
     paddingBottom: 15,
     borderBottomWidth: 1,
-    borderBottomColor: colors.gray[200],
+    borderBottomColor: 'rgba(255, 255, 255, 0.2)',
   },
   label: {
     fontSize: 14,
-    color: colors.text.secondary,
+    color: colors.white,
+    opacity: 0.8,
     marginBottom: 5,
   },
   value: {
     fontSize: 16,
-    color: colors.text.primary,
+    color: colors.white,
     fontWeight: "500",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  loadingText: {
+    marginTop: 10,
+    color: colors.white,
+    fontSize: 16,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: 'transparent',
+  },
+  errorText: {
+    color: colors.status.error,
+    fontSize: 16,
+    textAlign: 'center',
   },
 }); 

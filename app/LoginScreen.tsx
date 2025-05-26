@@ -123,8 +123,16 @@ const styles = StyleSheet.create({
   formContainer: {
     width: '80%',
     padding: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: '#4b71b4',
     borderRadius: 15,
+    shadowColor: colors.black,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   input: {
     backgroundColor: colors.white,
@@ -145,15 +153,23 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   forgotText: {
-    color: colors.primary,
+    color: colors.white,
     fontSize: 14,
     textDecorationLine: 'underline',
   },
   loginButton: {
-    backgroundColor: colors.primary,
+    backgroundColor: '#a40078',
     borderRadius: 12,
     padding: 15,
     alignItems: 'center',
+    shadowColor: colors.black,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   loginButtonDisabled: {
     opacity: 0.7,

@@ -92,130 +92,124 @@ export default function RequestCardScreen() {
       style={styles.backgroundImage}
     >
       <ScrollView style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity 
-            style={styles.backButton}
-            onPress={() => router.back()}
-          >
-            <Ionicons name="arrow-back" size={24} color={colors.white} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Request New Card</Text>
-        </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Request New Card</Text>
+          
+          <View style={styles.content}>
+            <Text style={styles.instructions}>
+              Please fill in the following details to request a new card. Fields marked with * are required.
+            </Text>
 
-        <View style={styles.content}>
-          <Text style={styles.instructions}>
-            Please fill in the following details to request a new card. Fields marked with * are required.
-          </Text>
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>Name on Card *</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter name as it should appear on card"
+                value={formData.initiator.nameoncard}
+                onChangeText={(text) => setFormData({ 
+                  ...formData, 
+                  initiator: { ...formData.initiator, nameoncard: text.toUpperCase() } 
+                })}
+                autoCapitalize="characters"
+              />
+            </View>
 
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Name on Card *</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter name as it should appear on card"
-              value={formData.initiator.nameoncard}
-              onChangeText={(text) => setFormData({ 
-                ...formData, 
-                initiator: { ...formData.initiator, nameoncard: text.toUpperCase() } 
-              })}
-              autoCapitalize="characters"
-            />
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>First Name *</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter first name"
+                value={formData.initiator.firstname}
+                onChangeText={(text) => setFormData({ 
+                  ...formData, 
+                  initiator: { ...formData.initiator, firstname: text } 
+                })}
+                autoCapitalize="words"
+              />
+            </View>
+
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>Last Name *</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter last name"
+                value={formData.initiator.lastname}
+                onChangeText={(text) => setFormData({ 
+                  ...formData, 
+                  initiator: { ...formData.initiator, lastname: text } 
+                })}
+                autoCapitalize="words"
+              />
+            </View>
+
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>Phone Number *</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter phone number"
+                keyboardType="phone-pad"
+                value={formData.initiator.phonenumber}
+                onChangeText={(text) => setFormData({ 
+                  ...formData, 
+                  initiator: { ...formData.initiator, phonenumber: text } 
+                })}
+              />
+            </View>
+
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>National ID *</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter national ID"
+                value={formData.initiator.nationalid}
+                onChangeText={(text) => setFormData({ 
+                  ...formData, 
+                  initiator: { ...formData.initiator, nationalid: text } 
+                })}
+              />
+            </View>
+
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>Birth Date *</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="DD/MM/YYYY"
+                value={formData.initiator.birthdate}
+                onChangeText={(text) => setFormData({ 
+                  ...formData, 
+                  initiator: { ...formData.initiator, birthdate: text } 
+                })}
+              />
+            </View>
+
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>ZIP Address *</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter ZIP code"
+                value={formData.initiator.zipaddress}
+                onChangeText={(text) => setFormData({ 
+                  ...formData, 
+                  initiator: { ...formData.initiator, zipaddress: text } 
+                })}
+              />
+            </View>
+
+            <TouchableOpacity
+              style={[styles.submitButton, isLoading && styles.submitButtonDisabled]}
+              onPress={handleSubmit}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <ActivityIndicator color={colors.white} />
+              ) : (
+                <>
+                  <Text style={styles.submitButtonText}>Request Card</Text>
+                  <Ionicons name="card" size={20} color={colors.white} />
+                </>
+              )}
+            </TouchableOpacity>
           </View>
-
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>First Name *</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter first name"
-              value={formData.initiator.firstname}
-              onChangeText={(text) => setFormData({ 
-                ...formData, 
-                initiator: { ...formData.initiator, firstname: text } 
-              })}
-              autoCapitalize="words"
-            />
-          </View>
-
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Last Name *</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter last name"
-              value={formData.initiator.lastname}
-              onChangeText={(text) => setFormData({ 
-                ...formData, 
-                initiator: { ...formData.initiator, lastname: text } 
-              })}
-              autoCapitalize="words"
-            />
-          </View>
-
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Phone Number *</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter phone number"
-              keyboardType="phone-pad"
-              value={formData.initiator.phonenumber}
-              onChangeText={(text) => setFormData({ 
-                ...formData, 
-                initiator: { ...formData.initiator, phonenumber: text } 
-              })}
-            />
-          </View>
-
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>National ID *</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter national ID"
-              value={formData.initiator.nationalid}
-              onChangeText={(text) => setFormData({ 
-                ...formData, 
-                initiator: { ...formData.initiator, nationalid: text } 
-              })}
-            />
-          </View>
-
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Birth Date *</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="DD/MM/YYYY"
-              value={formData.initiator.birthdate}
-              onChangeText={(text) => setFormData({ 
-                ...formData, 
-                initiator: { ...formData.initiator, birthdate: text } 
-              })}
-            />
-          </View>
-
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>ZIP Address *</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter ZIP code"
-              value={formData.initiator.zipaddress}
-              onChangeText={(text) => setFormData({ 
-                ...formData, 
-                initiator: { ...formData.initiator, zipaddress: text } 
-              })}
-            />
-          </View>
-
-          <TouchableOpacity
-            style={[styles.submitButton, isLoading && styles.submitButtonDisabled]}
-            onPress={handleSubmit}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <ActivityIndicator color={colors.white} />
-            ) : (
-              <>
-                <Text style={styles.submitButtonText}>Request Card</Text>
-                <Ionicons name="card" size={20} color={colors.white} />
-              </>
-            )}
-          </TouchableOpacity>
         </View>
       </ScrollView>
     </ImageBackground>
@@ -226,37 +220,27 @@ const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
     width: '100%',
-    height: '100%',
   },
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
   },
-  scrollView: {
-    flex: 1,
-  },
-  header: {
-    backgroundColor: colors.primary,
+  section: {
     padding: 20,
-    paddingTop: 50,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
-    opacity: 0.9,
   },
-  backButton: {
-    marginRight: 15,
-  },
-  headerTitle: {
+  sectionTitle: {
     fontSize: 24,
     fontWeight: 'bold',
     color: colors.white,
+    marginBottom: 15,
   },
   content: {
+    backgroundColor: '#4b71b4',
+    borderRadius: 15,
     padding: 20,
   },
   instructions: {
     fontSize: 14,
-    color: colors.text.secondary,
+    color: colors.white,
     marginBottom: 20,
     lineHeight: 20,
   },
@@ -266,11 +250,11 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '500',
-    color: colors.text.primary,
+    color: colors.white,
     marginBottom: 8,
   },
   input: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: colors.white,
     borderRadius: 12,
     borderWidth: 1,
     borderColor: colors.gray[200],
@@ -279,7 +263,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   submitButton: {
-    backgroundColor: colors.primary,
+    backgroundColor: '#a40078',
     borderRadius: 12,
     padding: 15,
     flexDirection: 'row',

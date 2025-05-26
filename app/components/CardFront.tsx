@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { ChipIcon } from './ChipIcon';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface CardFrontProps {
   cardNumber: string;
@@ -23,10 +24,12 @@ export const CardFront: React.FC<CardFrontProps> = ({
   };
 
   return (
-    <View style={[
-      styles.container,
-      { backgroundColor: isActive ? colors.primary : colors.gray[400] }
-    ]}>
+    <LinearGradient
+      colors={isActive ? colors.primaryGradient : colors.secondaryGradient}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.container}
+    >
       {/* Shine effect */}
       <View style={styles.shineEffect} />
       
@@ -58,7 +61,11 @@ export const CardFront: React.FC<CardFrontProps> = ({
           <Text style={styles.value}>{expiryDate || 'MM/YY'}</Text>
         </View>
       </View>
-    </View>
+
+      {/* Decorative circles */}
+      <View style={styles.decorativeCircle1} />
+      <View style={styles.decorativeCircle2} />
+    </LinearGradient>
   );
 };
 
@@ -66,14 +73,14 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     aspectRatio: 1.6,
-    borderRadius: 16,
+    borderRadius: 20,
     padding: 24,
     overflow: 'hidden',
     shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
+    shadowRadius: 12,
+    elevation: 12,
   },
   shineEffect: {
     position: 'absolute',
@@ -96,9 +103,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.white,
     letterSpacing: 1.5,
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   wifiIcon: {
-    opacity: 0.8,
+    opacity: 0.9,
   },
   chipContainer: {
     flexDirection: 'row',
@@ -113,6 +123,9 @@ const styles = StyleSheet.create({
     letterSpacing: 2.5,
     textTransform: 'uppercase',
     fontWeight: '600',
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   cardNumber: {
     fontSize: 24,
@@ -121,6 +134,9 @@ const styles = StyleSheet.create({
     marginBottom: 32,
     fontFamily: 'monospace',
     fontWeight: '500',
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   footer: {
     flexDirection: 'row',
@@ -142,6 +158,9 @@ const styles = StyleSheet.create({
     letterSpacing: 1.5,
     textTransform: 'uppercase',
     fontWeight: '500',
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   value: {
     fontSize: 16,
@@ -149,5 +168,26 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textTransform: 'uppercase',
     letterSpacing: 1,
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+  },
+  decorativeCircle1: {
+    position: 'absolute',
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    top: -100,
+    right: -100,
+  },
+  decorativeCircle2: {
+    position: 'absolute',
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    bottom: -75,
+    left: -75,
   },
 }); 
