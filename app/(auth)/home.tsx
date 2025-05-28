@@ -148,20 +148,49 @@ export default function HomeScreen() {
       </View>
       
       <View style={styles.drawerContent}>
-        <TouchableOpacity style={styles.drawerItem} onPress={() => router.push('/profile')}>
-          <Ionicons name="person-circle-outline" size={24} color={colors.white} />
-          <Text style={styles.drawerItemText}>Profile</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.drawerItem} onPress={() => router.push('/request-card')}>
-          <Ionicons name="card-outline" size={24} color={colors.white} />
-          <Text style={styles.drawerItemText}>Request Card</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.drawerItem} onPress={() => router.push('/settings')}>
-          <Ionicons name="settings-outline" size={24} color={colors.white} />
-          <Text style={styles.drawerItemText}>Settings</Text>
-        </TouchableOpacity>
+        {/* My News Section */}
+        <View style={styles.drawerSection}>
+          <Text style={styles.sectionTitle}>My News</Text>
+          <TouchableOpacity style={styles.drawerItem} onPress={() => router.push('/news')}>
+            <Ionicons name="newspaper-outline" size={24} color={colors.white} />
+            <Text style={styles.drawerItemText}>News</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.drawerItem} onPress={() => router.push('/devices')}>
+            <Ionicons name="phone-portrait-outline" size={24} color={colors.white} />
+            <Text style={styles.drawerItemText}>Devices</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* My Operations Section */}
+        <View style={styles.drawerSection}>
+          <Text style={styles.sectionTitle}>My Operations</Text>
+          <TouchableOpacity style={styles.drawerItem} onPress={() => router.push('/make-transaction')}>
+            <Ionicons name="swap-horizontal-outline" size={24} color={colors.white} />
+            <Text style={styles.drawerItemText}>Make Transaction</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.drawerItem} onPress={() => router.push('/receivers')}>
+            <Ionicons name="people-outline" size={24} color={colors.white} />
+            <Text style={styles.drawerItemText}>Bénéficiaires</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Online Service Section */}
+        <View style={styles.drawerSection}>
+          <Text style={styles.sectionTitle}>Online Service</Text>
+          <TouchableOpacity style={styles.drawerItem} onPress={() => router.push('/my-benefits')}>
+            <Ionicons name="gift-outline" size={24} color={colors.white} />
+            <Text style={styles.drawerItemText}>My Benefits</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Assistance Section */}
+        <View style={styles.drawerSection}>
+          <Text style={styles.sectionTitle}>Assistance</Text>
+          <TouchableOpacity style={styles.drawerItem} onPress={() => router.push('/client-relation')}>
+            <Ionicons name="headset-outline" size={24} color={colors.white} />
+            <Text style={styles.drawerItemText}>Client Relation</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </Animated.View>
   );
@@ -331,7 +360,7 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     width: DRAWER_WIDTH,
-    backgroundColor: colors.primary,
+    backgroundColor: '#2D1B4D',
     padding: 20,
     zIndex: 1000,
   },
@@ -358,10 +387,22 @@ const styles = StyleSheet.create({
   drawerContent: {
     marginTop: 20,
   },
+  drawerSection: {
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    color: colors.white,
+    fontSize: 14,
+    fontWeight: '600',
+    opacity: 0.7,
+    marginBottom: 10,
+    paddingHorizontal: 15,
+  },
   drawerItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 15,
+    paddingVertical: 12,
+    paddingHorizontal: 15,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(255,255,255,0.1)',
   },
@@ -394,12 +435,6 @@ const styles = StyleSheet.create({
   },
   section: {
     padding: 20,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: colors.white,
-    marginBottom: 15,
   },
   loadingContainer: {
     flex: 1,
