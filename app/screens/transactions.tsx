@@ -1,6 +1,7 @@
-import { View, Text, StyleSheet, FlatList, ImageBackground, TouchableOpacity } from 'react-native';
-import { colors } from '../theme/colors';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { colors } from '../theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 
 interface Transaction {
@@ -9,14 +10,15 @@ interface Transaction {
   amount: number;
   description: string;
   date: string;
+  category?: string;
 }
 
 // Mock data for transactions
 const mockTransactions: Transaction[] = [
-  { id: '1', type: 'credit', amount: 500, description: 'Salary', date: '2024-03-20' },
-  { id: '2', type: 'debit', amount: 100, description: 'Grocery Shopping', date: '2024-03-19' },
-  { id: '3', type: 'debit', amount: 50, description: 'Coffee Shop', date: '2024-03-18' },
-  { id: '4', type: 'credit', amount: 200, description: 'Refund', date: '2024-03-17' },
+  { id: '1', type: 'credit', amount: 500, description: 'Salary', date: '2024-03-20', category: 'Income' },
+  { id: '2', type: 'debit', amount: 100, description: 'Grocery Shopping', date: '2024-03-19', category: 'Shopping' },
+  { id: '3', type: 'debit', amount: 50, description: 'Coffee Shop', date: '2024-03-18', category: 'Food & Drink' },
+  { id: '4', type: 'credit', amount: 200, description: 'Refund', date: '2024-03-17', category: 'Refund' },
 ];
 
 export default function TransactionsScreen() {
@@ -24,52 +26,85 @@ export default function TransactionsScreen() {
   const router = useRouter();
   const balance = 2500; // Mock balance
 
-  const renderTransaction = ({ item }: { item: Transaction }) => (
-    <View style={styles.transactionItem}>
-      <View style={styles.transactionInfo}>
-        <Text style={styles.transactionDescription}>{item.description}</Text>
-        <Text style={styles.transactionDate}>{item.date}</Text>
-      </View>
-      <Text style={[
-        styles.transactionAmount,
-        item.type === 'credit' ? styles.creditAmount : styles.debitAmount
-      ]}>
-        {item.type === 'credit' ? '+' : '-'}${Math.abs(item.amount)}
-      </Text>
-    </View>
-  );
+  const getCategoryIcon = (category: string) => {
+    switch (category?.toLowerCase()) {
+      case 'income':
+        return 'cash-outline';
+      case 'shopping':
+        return 'cart-outline';
+      case 'food & drink':
+        return 'restaurant-outline';
+      case 'refund':
+        return 'return-down-back-outline';
+      default:
+        return 'card-outline';
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    });
+  };
 
   return (
     <ImageBackground
       source={require('../../assets/images/background.webp')}
       style={styles.backgroundImage}
     >
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity 
-            style={styles.backButton}
-            onPress={() => router.back()}
-          >
-            <Ionicons name="arrow-back" size={24} color={colors.white} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Transaction History</Text>
-        </View>
+      <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 30 }}>
+        <View style={styles.section}>
+          <View style={styles.header}>
+            <TouchableOpacity 
+              style={styles.backButton}
+              onPress={() => router.back()}
+            >
+              <Ionicons name="arrow-back" size={24} color={colors.white} />
+            </TouchableOpacity>
+            <Text style={styles.sectionTitle}>Transaction History</Text>
+          </View>
 
-        <View style={styles.balanceContainer}>
-          <Text style={styles.balanceLabel}>Current Balance</Text>
-          <Text style={styles.balanceAmount}>${balance}</Text>
-        </View>
+          <View style={styles.balanceBox}>
+            <Text style={styles.balanceLabel}>Current Balance</Text>
+            <Text style={styles.balanceAmount}>${balance.toLocaleString()}</Text>
+          </View>
 
-        <View style={styles.transactionsContainer}>
-          <FlatList
-            data={mockTransactions}
-            renderItem={renderTransaction}
-            keyExtractor={item => item.id}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.transactionsList}
-          />
+          <View style={styles.transactionsList}>
+            {mockTransactions.map((transaction) => (
+              <View key={transaction.id} style={styles.transactionBox}>
+                <View style={styles.transactionRow}>
+                  <View style={styles.iconContainer}>
+                    <Ionicons 
+                      name={getCategoryIcon(transaction.category || '')} 
+                      size={24} 
+                      color={colors.primary} 
+                    />
+                  </View>
+                  <View style={styles.transactionInfo}>
+                    <Text style={styles.transactionDescription}>{transaction.description}</Text>
+                    <Text style={styles.transactionCategory}>{transaction.category}</Text>
+                  </View>
+                  <Text style={[
+                    styles.transactionAmount,
+                    transaction.type === 'credit' ? styles.creditAmount : styles.debitAmount
+                  ]}>
+                    {transaction.type === 'credit' ? '+' : '-'}${Math.abs(transaction.amount)}
+                  </Text>
+                </View>
+                <View style={styles.transactionDetails}>
+                  <Text style={styles.transactionDate}>{formatDate(transaction.date)}</Text>
+                  <Text style={styles.transactionType}>
+                    {transaction.type === 'credit' ? 'Credit' : 'Debit'}
+                  </Text>
+                </View>
+              </View>
+            ))}
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </ImageBackground>
   );
 }
@@ -82,70 +117,87 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  section: {
+    padding: 20,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 20,
-    paddingTop: 40,
+    marginBottom: 25,
   },
   backButton: {
     marginRight: 15,
   },
-  headerTitle: {
-    fontSize: 24,
+  sectionTitle: {
+    fontSize: 28,
     fontWeight: 'bold',
     color: colors.white,
+    letterSpacing: 1,
   },
-  balanceContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    margin: 20,
-    padding: 20,
-    borderRadius: 15,
-    alignItems: 'center',
+  balanceBox: {
+    backgroundColor: 'rgba(0,0,0,0.15)',
+    borderRadius: 18,
+    padding: 24,
+    marginBottom: 24,
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+    elevation: 2,
   },
   balanceLabel: {
     fontSize: 16,
-    color: colors.text.secondary,
-    marginBottom: 5,
+    color: colors.gray[200],
+    marginBottom: 8,
   },
   balanceAmount: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: colors.text.primary,
-  },
-  transactionsContainer: {
-    flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    margin: 20,
-    marginTop: 0,
-    borderRadius: 15,
-    padding: 15,
+    color: colors.white,
+    letterSpacing: 1,
   },
   transactionsList: {
-    paddingBottom: 20,
+    gap: 16,
   },
-  transactionItem: {
+  transactionBox: {
+    backgroundColor: 'rgba(0,0,0,0.15)',
+    borderRadius: 18,
+    padding: 20,
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  transactionRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.gray[200],
+    marginBottom: 12,
+  },
+  iconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
   },
   transactionInfo: {
     flex: 1,
   },
   transactionDescription: {
-    fontSize: 16,
-    color: colors.text.primary,
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.white,
     marginBottom: 4,
   },
-  transactionDate: {
+  transactionCategory: {
     fontSize: 14,
-    color: colors.text.secondary,
+    color: colors.gray[300],
   },
   transactionAmount: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   creditAmount: {
@@ -153,5 +205,22 @@ const styles = StyleSheet.create({
   },
   debitAmount: {
     color: colors.status.error,
+  },
+  transactionDetails: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255,255,255,0.1)',
+    paddingTop: 12,
+  },
+  transactionDate: {
+    fontSize: 14,
+    color: colors.gray[300],
+  },
+  transactionType: {
+    fontSize: 14,
+    color: colors.gray[300],
+    textTransform: 'capitalize',
   },
 }); 

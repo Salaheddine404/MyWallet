@@ -21,24 +21,24 @@ interface Card {
 const MOCK_CARDS: Card[] = [
   {
     card: "CARD001",
-    pan: "4111********1111",
-    name_on_card: "JOHN DOE",
+    pan: "4532********7890",
+    name_on_card: "HAMID EL-QASRY",
     status: "ACTIVE",
     expiry_date: "12/25",
     card_type: "VISA"
   },
   {
     card: "CARD002",
-    pan: "5111********2222",
-    name_on_card: "JOHN DOE",
+    pan: "5248********4567",
+    name_on_card: "HAMID EL-QASRY",
     status: "ACTIVE",
     expiry_date: "09/24",
     card_type: "MASTERCARD"
   },
   {
     card: "CARD003",
-    pan: "6111********3333",
-    name_on_card: "JOHN DOE",
+    pan: "6011********8901",
+    name_on_card: "HAMID EL-QASRY",
     status: "INACTIVE",
     expiry_date: "03/26",
     card_type: "VISA"

@@ -33,6 +33,12 @@ export default function SettingsScreen() {
               <Ionicons name="chevron-forward" size={24} color={colors.gray[400]} style={styles.chevron} />
             </TouchableOpacity>
 
+            <TouchableOpacity style={styles.settingItem} onPress={() => router.push({ pathname: '/screens/card-management', params: { customerId } })}>
+              <Ionicons name="alert-circle-outline" size={24} color={colors.primary} />
+              <Text style={styles.settingText}>Card Management</Text>
+              <Ionicons name="chevron-forward" size={24} color={colors.gray[400]} style={styles.chevron} />
+            </TouchableOpacity>
+
             <TouchableOpacity style={styles.settingItem}>
               <Ionicons name="notifications-outline" size={24} color={colors.primary} />
               <Text style={styles.settingText}>Notifications</Text>

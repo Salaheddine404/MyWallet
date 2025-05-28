@@ -22,40 +22,20 @@ export default function ProfileScreen() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log('Profile Screen mounted with customerId:', customerId);
-    
-    if (customerId) {
-      loadCustomerProfile();
-    } else {
-      console.error('No customerId provided');
-      setError('Customer ID is required');
-      setLoading(false);
-    }
-  }, [customerId]);
-
-  const loadCustomerProfile = async () => {
-    console.log('Starting to load profile for customerId:', customerId);
-    try {
-      setLoading(true);
-      setError(null);
-      console.log('Calling fetchCustomerProfile with customerId:', customerId);
-      const customerData = await fetchCustomerProfile(customerId);
-      console.log('Received customer data:', customerData);
-      
-      if (customerData) {
-        console.log('Setting customer data:', customerData);
-        setCustomer(customerData);
-      } else {
-        console.log('No customer data received');
-        setError('No customer data found');
+    const loadProfile = async () => {
+      try {
+        const data = await fetchCustomerProfile(customerId);
+        setCustomer(data);
+      } catch (err) {
+        setError('Failed to load profile. Please try again.');
+        console.error('Error loading profile:', err);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error('Error loading profile:', err);
-      setError('Failed to load customer profile');
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    loadProfile();
+  }, [customerId]);
 
   if (loading) {
     return (
@@ -98,9 +78,7 @@ export default function ProfileScreen() {
               </View>
             </View>
             <Text style={styles.welcomeText}>Welcome back,</Text>
-            <Text style={styles.nameText}>
-              {customer?.firstnameen} {customer?.lastnameen}
-            </Text>
+            <Text style={styles.nameText}>HAMID EL-QASRY</Text>
           </View>
 
           <View style={styles.card}>
@@ -114,11 +92,11 @@ export default function ProfileScreen() {
             </View>
             <View style={styles.infoContainer}>
               <Text style={styles.label}>Account Number</Text>
-              <Text style={styles.value}>{customer?.customer}</Text>
+              <Text style={styles.value}>MA-2024-7895-1234</Text>
             </View>
             <View style={styles.infoContainer}>
               <Text style={styles.label}>National ID</Text>
-              <Text style={styles.value}>{customer?.nationalid}</Text>
+              <Text style={styles.value}>Z24561</Text>
             </View>
           </View>
 
@@ -129,9 +107,7 @@ export default function ProfileScreen() {
             </View>
             <View style={styles.infoContainer}>
               <Text style={styles.label}>Full Name</Text>
-              <Text style={styles.value}>
-                {customer?.firstnameen} {customer?.middnameen} {customer?.lastnameen}
-              </Text>
+              <Text style={styles.value}>HAMID EL-QASRY</Text>
             </View>
             {customer?.birthdate && (
               <View style={styles.infoContainer}>
@@ -167,9 +143,9 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: colors.gray[300],
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   welcomeText: {
     color: colors.white,
@@ -179,30 +155,27 @@ const styles = StyleSheet.create({
   nameText: {
     color: colors.white,
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   card: {
-    backgroundColor: '#4b71b4',
-    borderRadius: 15,
+    backgroundColor: 'rgba(0,0,0,0.15)',
+    borderRadius: 18,
     padding: 20,
-    marginBottom: 15,
+    marginBottom: 20,
     shadowColor: colors.black,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+    elevation: 2,
   },
   cardHeader: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 20,
   },
   cardTitle: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: colors.white,
     marginLeft: 10,
   },
@@ -210,24 +183,22 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     paddingBottom: 15,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.2)',
+    borderBottomColor: 'rgba(255,255,255,0.1)',
   },
   label: {
     fontSize: 14,
-    color: colors.white,
-    opacity: 0.8,
+    color: colors.gray[200],
     marginBottom: 5,
   },
   value: {
     fontSize: 16,
     color: colors.white,
-    fontWeight: "500",
+    fontWeight: '500',
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'transparent',
   },
   loadingText: {
     marginTop: 10,
@@ -239,7 +210,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: 'transparent',
   },
   errorText: {
     color: colors.status.error,
