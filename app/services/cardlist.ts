@@ -22,7 +22,7 @@ const MOCK_CARDS: Card[] = [
   {
     card: "CARD001",
     pan: "4532********7890",
-    name_on_card: "HAMID EL-QASRY",
+    name_on_card: "SAAID TALIBI",
     status: "ACTIVE",
     expiry_date: "12/25",
     card_type: "VISA"
@@ -30,7 +30,7 @@ const MOCK_CARDS: Card[] = [
   {
     card: "CARD002",
     pan: "5248********4567",
-    name_on_card: "HAMID EL-QASRY",
+    name_on_card: "SAAID TALIBI",
     status: "ACTIVE",
     expiry_date: "09/24",
     card_type: "MASTERCARD"
@@ -38,7 +38,7 @@ const MOCK_CARDS: Card[] = [
   {
     card: "CARD003",
     pan: "6011********8901",
-    name_on_card: "HAMID EL-QASRY",
+    name_on_card: "SAAID TALIBI",
     status: "INACTIVE",
     expiry_date: "03/26",
     card_type: "VISA"

@@ -78,7 +78,7 @@ export default function ProfileScreen() {
               </View>
             </View>
             <Text style={styles.welcomeText}>Welcome back,</Text>
-            <Text style={styles.nameText}>HAMID EL-QASRY</Text>
+            <Text style={styles.nameText}>SAAID TALIBI</Text>
           </View>
 
           <View style={styles.card}>
@@ -92,7 +92,7 @@ export default function ProfileScreen() {
             </View>
             <View style={styles.infoContainer}>
               <Text style={styles.label}>Account Number</Text>
-              <Text style={styles.value}>MA-2024-7895-1234</Text>
+              <Text style={styles.value}>2546-6598-4471-4898</Text>
             </View>
             <View style={styles.infoContainer}>
               <Text style={styles.label}>National ID</Text>
@@ -107,7 +107,7 @@ export default function ProfileScreen() {
             </View>
             <View style={styles.infoContainer}>
               <Text style={styles.label}>Full Name</Text>
-              <Text style={styles.value}>HAMID EL-QASRY</Text>
+              <Text style={styles.value}>SAAID TALIBI</Text>
             </View>
             {customer?.birthdate && (
               <View style={styles.infoContainer}>
