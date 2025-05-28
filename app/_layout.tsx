@@ -23,12 +23,13 @@ export default function RootLayout() {
     const isIndex = segments.length === 0 || segments[0] === undefined;
     const isTransactionsScreen = segments[0] === "screens" && segments[1] === "transactions";
     const isCardManagementScreen = segments[0] === "screens" && segments[1] === "card-management";
+    const isDevicesScreen = segments[0] === "screens" && segments[1] === "devices";
     
     // Get the customerId from the URL if it exists
     const customerId = segments[1]?.split("?")[1]?.split("=")[1];
     
-    // Only redirect if we're not in the auth group, not on the index page, and not on the transactions screen
-    if (!inAuthGroup && !isIndex && !isTransactionsScreen && !isCardManagementScreen && !["home", "profile", "request-card", "settings"].includes(segments[0])) {
+    // Only redirect if we're not in the auth group, not on the index page, and not on the screens
+    if (!inAuthGroup && !isIndex && !isTransactionsScreen && !isCardManagementScreen && !isDevicesScreen && !["home", "profile", "request-card", "settings"].includes(segments[0])) {
       router.replace("/");
     }
   }, [segments, isReady]);

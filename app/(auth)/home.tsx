@@ -151,11 +151,17 @@ export default function HomeScreen() {
         {/* My News Section */}
         <View style={styles.drawerSection}>
           <Text style={styles.sectionTitle}>My News</Text>
-          <TouchableOpacity style={styles.drawerItem} onPress={() => router.push('/news')}>
+          <TouchableOpacity style={styles.drawerItem} onPress={() => {
+            router.push({ pathname: '/screens/news' });
+            toggleDrawer();
+          }}>
             <Ionicons name="newspaper-outline" size={24} color={colors.white} />
             <Text style={styles.drawerItemText}>News</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.drawerItem} onPress={() => router.push('/devices')}>
+          <TouchableOpacity style={styles.drawerItem} onPress={() => {
+            router.push({ pathname: '/screens/devices' });
+            toggleDrawer();
+          }}>
             <Ionicons name="phone-portrait-outline" size={24} color={colors.white} />
             <Text style={styles.drawerItemText}>Devices</Text>
           </TouchableOpacity>
@@ -164,11 +170,17 @@ export default function HomeScreen() {
         {/* My Operations Section */}
         <View style={styles.drawerSection}>
           <Text style={styles.sectionTitle}>My Operations</Text>
-          <TouchableOpacity style={styles.drawerItem} onPress={() => router.push('/make-transaction')}>
+          <TouchableOpacity style={styles.drawerItem} onPress={() => {
+            router.push({ pathname: '/screens/make-transaction' });
+            toggleDrawer();
+          }}>
             <Ionicons name="swap-horizontal-outline" size={24} color={colors.white} />
             <Text style={styles.drawerItemText}>Make Transaction</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.drawerItem} onPress={() => router.push('/receivers')}>
+          <TouchableOpacity style={styles.drawerItem} onPress={() => {
+            router.push({ pathname: '/screens/receivers' });
+            toggleDrawer();
+          }}>
             <Ionicons name="people-outline" size={24} color={colors.white} />
             <Text style={styles.drawerItemText}>Bénéficiaires</Text>
           </TouchableOpacity>
@@ -177,7 +189,10 @@ export default function HomeScreen() {
         {/* Online Service Section */}
         <View style={styles.drawerSection}>
           <Text style={styles.sectionTitle}>Online Service</Text>
-          <TouchableOpacity style={styles.drawerItem} onPress={() => router.push('/my-benefits')}>
+          <TouchableOpacity style={styles.drawerItem} onPress={() => {
+            router.push({ pathname: '/screens/my-benefits' });
+            toggleDrawer();
+          }}>
             <Ionicons name="gift-outline" size={24} color={colors.white} />
             <Text style={styles.drawerItemText}>My Benefits</Text>
           </TouchableOpacity>
@@ -186,7 +201,10 @@ export default function HomeScreen() {
         {/* Assistance Section */}
         <View style={styles.drawerSection}>
           <Text style={styles.sectionTitle}>Assistance</Text>
-          <TouchableOpacity style={styles.drawerItem} onPress={() => router.push('/client-relation')}>
+          <TouchableOpacity style={styles.drawerItem} onPress={() => {
+            router.push({ pathname: '/screens/client-relation' });
+            toggleDrawer();
+          }}>
             <Ionicons name="headset-outline" size={24} color={colors.white} />
             <Text style={styles.drawerItemText}>Client Relation</Text>
           </TouchableOpacity>
