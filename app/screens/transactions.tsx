@@ -24,7 +24,7 @@ const mockTransactions: Transaction[] = [
 export default function TransactionsScreen() {
   const { customerId } = useLocalSearchParams();
   const router = useRouter();
-  const balance = 2500; // Mock balance
+  const balance = 24155.26; // Mock balance
 
   const getCategoryIcon = (category: string) => {
     switch (category?.toLowerCase()) {
@@ -69,7 +69,7 @@ export default function TransactionsScreen() {
 
           <View style={styles.balanceBox}>
             <Text style={styles.balanceLabel}>Current Balance</Text>
-            <Text style={styles.balanceAmount}>${balance.toLocaleString()}</Text>
+            <Text style={styles.balanceAmount}>{balance.toLocaleString()} MAD</Text>
           </View>
 
           <View style={styles.transactionsList}>
@@ -91,7 +91,7 @@ export default function TransactionsScreen() {
                     styles.transactionAmount,
                     transaction.type === 'credit' ? styles.creditAmount : styles.debitAmount
                   ]}>
-                    {transaction.type === 'credit' ? '+' : '-'}${Math.abs(transaction.amount)}
+                    {transaction.type === 'credit' ? '+' : '-'}{Math.abs(transaction.amount)} MAD
                   </Text>
                 </View>
                 <View style={styles.transactionDetails}>

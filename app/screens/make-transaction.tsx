@@ -14,7 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
 
 // Mock data for current balance
-const currentBalance = 2500; // This should be fetched from the transaction history
+const currentBalance = 24155.26; // This should be fetched from the transaction history
 
 export default function MakeTransactionScreen() {
   const router = useRouter();
