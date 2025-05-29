@@ -1,30 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { colors } from '../theme/colors';
 import { Ionicons } from '@expo/vector-icons';
-
-interface Transaction {
-  id: string;
-  type: 'credit' | 'debit';
-  amount: number;
-  description: string;
-  date: string;
-  category?: string;
-}
-
-// Mock data for transactions
-const mockTransactions: Transaction[] = [
-  { id: '1', type: 'credit', amount: 500, description: 'Salary', date: '2024-03-20', category: 'Income' },
-  { id: '2', type: 'debit', amount: 100, description: 'Grocery Shopping', date: '2024-03-19', category: 'Shopping' },
-  { id: '3', type: 'debit', amount: 50, description: 'Coffee Shop', date: '2024-03-18', category: 'Food & Drink' },
-  { id: '4', type: 'credit', amount: 200, description: 'Refund', date: '2024-03-17', category: 'Refund' },
-];
+import { useTransactionStore } from '../store/transactionStore';
 
 export default function TransactionsScreen() {
   const { customerId } = useLocalSearchParams();
   const router = useRouter();
-  const balance = 24155.26; // Mock balance
+  const { balance, transactions } = useTransactionStore();
 
   const getCategoryIcon = (category: string) => {
     switch (category?.toLowerCase()) {
@@ -73,32 +57,30 @@ export default function TransactionsScreen() {
           </View>
 
           <View style={styles.transactionsList}>
-            {mockTransactions.map((transaction) => (
+            {transactions.map((transaction) => (
               <View key={transaction.id} style={styles.transactionBox}>
                 <View style={styles.transactionRow}>
                   <View style={styles.iconContainer}>
                     <Ionicons 
-                      name={getCategoryIcon(transaction.category || '')} 
+                      name={getCategoryIcon(transaction.description || '')} 
                       size={24} 
                       color={colors.primary} 
                     />
                   </View>
                   <View style={styles.transactionInfo}>
                     <Text style={styles.transactionDescription}>{transaction.description}</Text>
-                    <Text style={styles.transactionCategory}>{transaction.category}</Text>
+                    <Text style={styles.transactionCategory}>{transaction.receiver}</Text>
                   </View>
                   <Text style={[
                     styles.transactionAmount,
-                    transaction.type === 'credit' ? styles.creditAmount : styles.debitAmount
+                    styles.debitAmount
                   ]}>
-                    {transaction.type === 'credit' ? '+' : '-'}{Math.abs(transaction.amount)} MAD
+                    -{transaction.amount} MAD
                   </Text>
                 </View>
                 <View style={styles.transactionDetails}>
                   <Text style={styles.transactionDate}>{formatDate(transaction.date)}</Text>
-                  <Text style={styles.transactionType}>
-                    {transaction.type === 'credit' ? 'Credit' : 'Debit'}
-                  </Text>
+                  <Text style={styles.transactionType}>Debit</Text>
                 </View>
               </View>
             ))}
@@ -199,9 +181,6 @@ const styles = StyleSheet.create({
   transactionAmount: {
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  creditAmount: {
-    color: colors.status.success,
   },
   debitAmount: {
     color: colors.status.error,

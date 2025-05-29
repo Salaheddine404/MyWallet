@@ -12,12 +12,11 @@ import {
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
-
-// Mock data for current balance
-const currentBalance = 24155.26; // This should be fetched from the transaction history
+import { useTransactionStore } from '../store/transactionStore';
 
 export default function MakeTransactionScreen() {
   const router = useRouter();
+  const { balance, updateBalance, addTransaction } = useTransactionStore();
   const [beneficiaryName, setBeneficiaryName] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
   const [amount, setAmount] = useState('');
@@ -37,13 +36,21 @@ export default function MakeTransactionScreen() {
     }
 
     // Check if sufficient balance
-    if (transactionAmount > currentBalance) {
+    if (transactionAmount > balance) {
       Alert.alert('Error', 'Insufficient balance');
       return;
     }
 
-    // Here you would typically make an API call to process the transaction
-    // For now, we'll just show a success message
+    // Update balance and add transaction
+    updateBalance(transactionAmount);
+    addTransaction({
+      sender: 'Said Talibi', // This should come from user profile
+      receiver: beneficiaryName,
+      amount: transactionAmount,
+      description: description || 'Transaction',
+    });
+
+    // Show success message
     Alert.alert(
       'Success',
       `Transaction of ${amount} MAD to ${beneficiaryName} completed successfully`,
@@ -79,7 +86,7 @@ export default function MakeTransactionScreen() {
           {/* Current Balance */}
           <View style={styles.balanceContainer}>
             <Text style={styles.balanceLabel}>Current Balance</Text>
-            <Text style={styles.balanceAmount}>{currentBalance} MAD</Text>
+            <Text style={styles.balanceAmount}>{balance.toLocaleString()} MAD</Text>
           </View>
 
           {/* Beneficiary Name Input */}

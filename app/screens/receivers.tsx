@@ -10,18 +10,11 @@ import {
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
-
-// Empty transactions array for dynamic data
-const transactions: Array<{
-  id: string;
-  sender: string;
-  receiver: string;
-  amount: string;
-  date: string;
-}> = [];
+import { useTransactionStore } from '../store/transactionStore';
 
 export default function ReceiversScreen() {
   const router = useRouter();
+  const { transactions } = useTransactionStore();
 
   return (
     <ImageBackground
@@ -60,7 +53,7 @@ export default function ReceiversScreen() {
                 <Text style={styles.cellText}>{transaction.receiver}</Text>
               </View>
               <View style={[styles.cell, { flex: 1 }]}>
-                <Text style={styles.cellText}>{transaction.amount}</Text>
+                <Text style={styles.cellText}>{transaction.amount} MAD</Text>
               </View>
             </View>
           ))}
