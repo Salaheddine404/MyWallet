@@ -11,7 +11,7 @@ import {
   Dimensions,
 } from "react-native";
 import { useEffect, useRef, useState } from "react";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter, useNavigation } from "expo-router";
 import { fetchCardList } from "../services/cardlist";
 import { changeCardStatus } from "../services/status";
 import { colors } from "../theme/colors";
@@ -33,6 +33,7 @@ const DRAWER_WIDTH = width * 0.75;
 
 export default function HomeScreen() {
   const router = useRouter();
+  const navigation = useNavigation();
   const { customerId } = useLocalSearchParams<{ customerId: string }>();
   const [cards, setCards] = useState<Card[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -46,6 +47,20 @@ export default function HomeScreen() {
     loadCards();
   }, []);
 
+  useEffect(() => {
+    // Open drawer when screen becomes active
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (!isDrawerOpen) {
+        setIsDrawerOpen(true);
+        toggleDrawer();
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [navigation, isDrawerOpen]);
+
   const toggleDrawer = () => {
     const toValue = isDrawerOpen ? 0 : 1;
     Animated.spring(drawerAnimation, {
@@ -55,6 +70,14 @@ export default function HomeScreen() {
       useNativeDriver: true,
     }).start();
     setIsDrawerOpen(!isDrawerOpen);
+  };
+
+  const handleDrawerNavigation = (path: string) => {
+    toggleDrawer();
+    // Add a small delay to allow the drawer to close smoothly
+    setTimeout(() => {
+      router.push({ pathname: path });
+    }, 300);
   };
 
   const drawerTranslateX = drawerAnimation.interpolate({
@@ -151,17 +174,17 @@ export default function HomeScreen() {
         {/* My News Section */}
         <View style={styles.drawerSection}>
           <Text style={styles.sectionTitle}>My News</Text>
-          <TouchableOpacity style={styles.drawerItem} onPress={() => {
-            router.push({ pathname: '/screens/news' });
-            toggleDrawer();
-          }}>
+          <TouchableOpacity 
+            style={styles.drawerItem} 
+            onPress={() => handleDrawerNavigation('/screens/news')}
+          >
             <Ionicons name="newspaper-outline" size={24} color={colors.white} />
             <Text style={styles.drawerItemText}>News</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.drawerItem} onPress={() => {
-            router.push({ pathname: '/screens/devices' });
-            toggleDrawer();
-          }}>
+          <TouchableOpacity 
+            style={styles.drawerItem} 
+            onPress={() => handleDrawerNavigation('/screens/devices')}
+          >
             <Ionicons name="phone-portrait-outline" size={24} color={colors.white} />
             <Text style={styles.drawerItemText}>Devises</Text>
           </TouchableOpacity>
@@ -170,17 +193,17 @@ export default function HomeScreen() {
         {/* My Operations Section */}
         <View style={styles.drawerSection}>
           <Text style={styles.sectionTitle}>My Operations</Text>
-          <TouchableOpacity style={styles.drawerItem} onPress={() => {
-            router.push({ pathname: '/screens/make-transaction' });
-            toggleDrawer();
-          }}>
+          <TouchableOpacity 
+            style={styles.drawerItem} 
+            onPress={() => handleDrawerNavigation('/screens/make-transaction')}
+          >
             <Ionicons name="swap-horizontal-outline" size={24} color={colors.white} />
             <Text style={styles.drawerItemText}>Make Transaction</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.drawerItem} onPress={() => {
-            router.push({ pathname: '/screens/receivers' });
-            toggleDrawer();
-          }}>
+          <TouchableOpacity 
+            style={styles.drawerItem} 
+            onPress={() => handleDrawerNavigation('/screens/receivers')}
+          >
             <Ionicons name="people-outline" size={24} color={colors.white} />
             <Text style={styles.drawerItemText}>Bénéficiaires</Text>
           </TouchableOpacity>
@@ -189,10 +212,10 @@ export default function HomeScreen() {
         {/* Online Service Section */}
         <View style={styles.drawerSection}>
           <Text style={styles.sectionTitle}>Online Service</Text>
-          <TouchableOpacity style={styles.drawerItem} onPress={() => {
-            router.push({ pathname: '/screens/my-benefits' });
-            toggleDrawer();
-          }}>
+          <TouchableOpacity 
+            style={styles.drawerItem} 
+            onPress={() => handleDrawerNavigation('/screens/my-benefits')}
+          >
             <Ionicons name="gift-outline" size={24} color={colors.white} />
             <Text style={styles.drawerItemText}>My Benefits</Text>
           </TouchableOpacity>
@@ -201,10 +224,10 @@ export default function HomeScreen() {
         {/* Assistance Section */}
         <View style={styles.drawerSection}>
           <Text style={styles.sectionTitle}>Assistance</Text>
-          <TouchableOpacity style={styles.drawerItem} onPress={() => {
-            router.push({ pathname: '/screens/client-relation' });
-            toggleDrawer();
-          }}>
+          <TouchableOpacity 
+            style={styles.drawerItem} 
+            onPress={() => handleDrawerNavigation('/screens/client-relation')}
+          >
             <Ionicons name="headset-outline" size={24} color={colors.white} />
             <Text style={styles.drawerItemText}>Client Relation</Text>
           </TouchableOpacity>

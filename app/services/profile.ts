@@ -29,12 +29,12 @@ interface CustomerResponse {
 // Mock data for customer profile
 const MOCK_CUSTOMER: Customer = {
   customer: 12345,
-  customerid: "CUST001",
+  customerid: "115732",
   firstnameen: "John",
   middnameen: "William",
   lastnameen: "Doe",
   nationalid: "1234567890",
-  birthdate: "1990-01-01"
+  birthdate: "1991-04-21"
 };
 
 export async function fetchCustomerProfile(customerId: string): Promise<Customer | null> {

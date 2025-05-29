@@ -9,18 +9,24 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useNavigation } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
 import { useTransactionStore } from '../store/transactionStore';
 
 export default function MakeTransactionScreen() {
   const router = useRouter();
+  const navigation = useNavigation();
   const { balance, updateBalance, addTransaction } = useTransactionStore();
   const [beneficiaryName, setBeneficiaryName] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
+
+  const handleBack = () => {
+    // Navigate back to the drawer
+    router.back();
+  };
 
   const handleTransaction = () => {
     // Validate inputs
@@ -58,11 +64,12 @@ export default function MakeTransactionScreen() {
         {
           text: 'OK',
           onPress: () => {
-            // Clear the form
+            // Clear the form and navigate back to drawer
             setBeneficiaryName('');
             setAccountNumber('');
             setAmount('');
             setDescription('');
+            handleBack();
           },
         },
       ]
@@ -75,7 +82,7 @@ export default function MakeTransactionScreen() {
       style={styles.backgroundImage}
     >
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+        <TouchableOpacity onPress={handleBack} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color={colors.white} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Make Transaction</Text>
