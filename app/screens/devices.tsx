@@ -14,7 +14,7 @@ import { colors } from '../theme/colors';
 
 const { width } = Dimensions.get('window');
 
-export default function DevicesScreen() {
+export default function DevisesScreen() {
   const router = useRouter();
 
   const currencies = [

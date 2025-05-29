@@ -163,7 +163,7 @@ export default function HomeScreen() {
             toggleDrawer();
           }}>
             <Ionicons name="phone-portrait-outline" size={24} color={colors.white} />
-            <Text style={styles.drawerItemText}>Devices</Text>
+            <Text style={styles.drawerItemText}>Devises</Text>
           </TouchableOpacity>
         </View>
 

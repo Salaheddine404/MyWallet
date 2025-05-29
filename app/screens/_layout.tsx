@@ -11,7 +11,7 @@ export default function ScreensLayout() {
       <Stack.Screen
         name="devices"
         options={{
-          title: 'My Devices',
+          title: 'My Devises',
         }}
       />
       <Stack.Screen
