@@ -27,6 +27,12 @@ export default function ScreensLayout() {
         }}
       />
       <Stack.Screen
+        name="beneficiaries"
+        options={{
+          title: 'Beneficiaries',
+        }}
+      />
+      <Stack.Screen
         name="receivers"
         options={{
           title: 'Bénéficiaires',
