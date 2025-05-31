@@ -25,14 +25,17 @@ export default function LoginScreen() {
     setIsLoading(true);
     
     try {
-      // Log the credentials
-      console.log('Login attempt with:', { customerId, password });
-      
-      // Accept any input and navigate
-      router.push({
-        pathname: "/(auth)/home",
-        params: { customerId },
-      });
+      // Check for admin credentials
+      if (customerId === '100001' && password === 'adm01') {
+        // Navigate to admin dashboard
+        router.replace('/screens/admin-dashboard');
+      } else {
+        // Regular user login
+        router.push({
+          pathname: "/(auth)/home",
+          params: { customerId },
+        });
+      }
     } catch (err) {
       console.error('Login error:', err);
       setError("An error occurred. Please try again.");

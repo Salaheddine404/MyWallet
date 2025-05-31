@@ -27,6 +27,7 @@ export default function RootLayout() {
     const isNewsScreen = segments[0] === "screens" && segments[1] === "news";
     const isReceiversScreen = segments[0] === "screens" && segments[1] === "receivers";
     const isMakeTransactionScreen = segments[0] === "screens" && segments[1] === "make-transaction";
+    const isAdminDashboard = segments[0] === "screens" && segments[1] === "admin-dashboard";
     
     // Get the customerId from the URL if it exists
     const customerId = segments[1]?.split("?")[1]?.split("=")[1];
@@ -39,6 +40,7 @@ export default function RootLayout() {
         !isNewsScreen && 
         !isReceiversScreen && 
         !isMakeTransactionScreen && 
+        !isAdminDashboard && 
         !["home", "profile", "request-card", "settings"].includes(segments[0])) {
       router.replace("/");
     }

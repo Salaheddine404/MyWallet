@@ -66,6 +66,12 @@ export default function ScreensLayout() {
           gestureEnabled: true,
         }}
       />
+      <Stack.Screen
+        name="admin-dashboard"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 } 
