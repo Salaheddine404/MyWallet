@@ -14,12 +14,7 @@ export const CardBack: React.FC<CardBackProps> = ({
   isActive = true,
 }) => {
   return (
-    <LinearGradient
-      colors={isActive ? colors.primaryGradient : colors.secondaryGradient}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={styles.container}
-    >
+    <View style={[styles.card, { backgroundColor: isActive ? '#90EE90' : '#00A36C' }]}>
       {/* Magnetic stripe */}
       <View style={styles.magneticStripe} />
       
@@ -52,21 +47,17 @@ export const CardBack: React.FC<CardBackProps> = ({
       {/* Decorative circles */}
       <View style={styles.decorativeCircle1} />
       <View style={styles.decorativeCircle2} />
-    </LinearGradient>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  card: {
     width: '100%',
-    aspectRatio: 1.6,
-    borderRadius: 20,
-    overflow: 'hidden',
-    shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 12,
+    height: '100%',
+    borderRadius: 15,
+    padding: 20,
+    justifyContent: 'space-between',
   },
   magneticStripe: {
     width: '100%',

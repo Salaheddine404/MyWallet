@@ -24,12 +24,7 @@ export const CardFront: React.FC<CardFrontProps> = ({
   };
 
   return (
-    <LinearGradient
-      colors={isActive ? colors.primaryGradient : colors.secondaryGradient}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={styles.container}
-    >
+    <View style={[styles.card, { backgroundColor: isActive ? '#90EE90' : '#00A36C' }]}>
       {/* Shine effect */}
       <View style={styles.shineEffect} />
       
@@ -65,7 +60,7 @@ export const CardFront: React.FC<CardFrontProps> = ({
       {/* Decorative circles */}
       <View style={styles.decorativeCircle1} />
       <View style={styles.decorativeCircle2} />
-    </LinearGradient>
+    </View>
   );
 };
 
@@ -189,5 +184,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
     bottom: -75,
     left: -75,
+  },
+  card: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 15,
+    padding: 20,
+    justifyContent: 'space-between',
   },
 }); 

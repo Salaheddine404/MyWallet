@@ -545,10 +545,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   activeButton: {
-    backgroundColor: '#00A36C',
+    backgroundColor: '#90EE90',
   },
   inactiveButton: {
-    backgroundColor: colors.gray[400],
+    backgroundColor: '#00A36C',
   },
   controlButtonText: {
     color: colors.white,

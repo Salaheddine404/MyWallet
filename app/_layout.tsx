@@ -23,7 +23,7 @@ export default function RootLayout() {
     const inAdminGroup = segments[0] === '(admin)';
     const inScreensGroup = segments[0] === 'screens';
     const inHomeGroup = segments[0] === 'home';
-
+    
     // Get customerId from URL if it exists
     const url = new URL(window.location.href);
     const customerId = url.searchParams.get('customerId');
