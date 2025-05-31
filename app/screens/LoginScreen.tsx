@@ -28,12 +28,12 @@ export default function LoginScreen() {
       // Check for admin credentials
       if (customerId === '100001' && password === 'adm01') {
         // Navigate to admin dashboard
-        router.replace('/screens/admin-dashboard');
+        router.replace('/(admin)/dashboard');
       } else {
         // Regular user login
         router.push({
-          pathname: "/(auth)/home",
-          params: { customerId },
+          pathname: '/screens/home',
+          params: { customerId }
         });
       }
     } catch (err) {

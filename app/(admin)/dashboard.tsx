@@ -73,6 +73,13 @@ export default function AdminDashboard() {
               <Ionicons name="settings-outline" size={24} color={colors.white} />
               <Text style={styles.actionButtonText}>Settings</Text>
             </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.actionButton}
+              onPress={() => router.push('/profile')}
+            >
+              <Ionicons name="person-circle-outline" size={24} color={colors.white} />
+              <Text style={styles.actionButtonText}>Profile</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
@@ -171,12 +178,13 @@ const styles = StyleSheet.create({
   quickActions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    gap: 8,
   },
   actionButton: {
     backgroundColor: colors.primary,
     borderRadius: 12,
-    padding: 15,
-    width: '31%',
+    padding: 12,
+    width: '23%',
     alignItems: 'center',
     shadowColor: colors.black,
     shadowOffset: { width: 0, height: 2 },
@@ -186,8 +194,8 @@ const styles = StyleSheet.create({
   },
   actionButtonText: {
     color: colors.white,
-    marginTop: 8,
-    fontSize: 12,
+    marginTop: 6,
+    fontSize: 11,
     textAlign: 'center',
   },
 }); 

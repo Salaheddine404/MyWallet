@@ -69,6 +69,13 @@ export default function AdminDashboard() {
               <Ionicons name="card-outline" size={24} color={colors.white} />
               <Text style={styles.actionButtonText}>Manage Cards</Text>
             </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.actionButton}
+              onPress={() => router.push('/screens/admin-profile')}
+            >
+              <Ionicons name="person-circle-outline" size={24} color={colors.white} />
+              <Text style={styles.actionButtonText}>Profile</Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.actionButton}>
               <Ionicons name="settings-outline" size={24} color={colors.white} />
               <Text style={styles.actionButtonText}>Settings</Text>
@@ -170,13 +177,15 @@ const styles = StyleSheet.create({
   },
   quickActions: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'space-between',
+    gap: 10,
   },
   actionButton: {
     backgroundColor: colors.primary,
     borderRadius: 12,
     padding: 15,
-    width: '31%',
+    width: '48%',
     alignItems: 'center',
     shadowColor: colors.black,
     shadowOffset: { width: 0, height: 2 },

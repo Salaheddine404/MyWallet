@@ -20,6 +20,7 @@ export default function RootLayout() {
     if (!isReady) return;
 
     const inAuthGroup = segments[0] === "(auth)";
+    const inAdminGroup = segments[0] === "(admin)";
     const isIndex = segments.length === 0 || segments[0] === undefined;
     const isTransactionsScreen = segments[0] === "screens" && segments[1] === "transactions";
     const isCardManagementScreen = segments[0] === "screens" && segments[1] === "card-management";
@@ -27,20 +28,18 @@ export default function RootLayout() {
     const isNewsScreen = segments[0] === "screens" && segments[1] === "news";
     const isReceiversScreen = segments[0] === "screens" && segments[1] === "receivers";
     const isMakeTransactionScreen = segments[0] === "screens" && segments[1] === "make-transaction";
-    const isAdminDashboard = segments[0] === "screens" && segments[1] === "admin-dashboard";
     
     // Get the customerId from the URL if it exists
     const customerId = segments[1]?.split("?")[1]?.split("=")[1];
     
-    // Only redirect if we're not in the auth group, not on the index page, and not on the screens
-    if (!inAuthGroup && !isIndex && 
+    // Only redirect if we're not in the auth group, admin group, not on the index page, and not on the screens
+    if (!inAuthGroup && !inAdminGroup && !isIndex && 
         !isTransactionsScreen && 
         !isCardManagementScreen && 
         !isDevicesScreen && 
         !isNewsScreen && 
         !isReceiversScreen && 
         !isMakeTransactionScreen && 
-        !isAdminDashboard && 
         !["home", "profile", "request-card", "settings"].includes(segments[0])) {
       router.replace("/");
     }
