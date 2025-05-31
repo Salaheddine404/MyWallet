@@ -1,9 +1,9 @@
-import { Stack } from 'expo-router';
-import { BackgroundImage } from './components/BackgroundImage';
-import { Slot, useRouter, useSegments } from "expo-router";
-import { useEffect, useState } from "react";
+import { Slot, useSegments, useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { colors } from './theme/colors';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { BackgroundImage } from './components/BackgroundImage';
 import { View } from 'react-native';
 
 export default function RootLayout() {
@@ -19,29 +19,22 @@ export default function RootLayout() {
   useEffect(() => {
     if (!isReady) return;
 
-    const inAuthGroup = segments[0] === "(auth)";
-    const inAdminGroup = segments[0] === "(admin)";
-    const isIndex = segments.length === 0 || segments[0] === undefined;
-    const isTransactionsScreen = segments[0] === "screens" && segments[1] === "transactions";
-    const isCardManagementScreen = segments[0] === "screens" && segments[1] === "card-management";
-    const isDevicesScreen = segments[0] === "screens" && segments[1] === "devices";
-    const isNewsScreen = segments[0] === "screens" && segments[1] === "news";
-    const isReceiversScreen = segments[0] === "screens" && segments[1] === "receivers";
-    const isMakeTransactionScreen = segments[0] === "screens" && segments[1] === "make-transaction";
-    
-    // Get the customerId from the URL if it exists
-    const customerId = segments[1]?.split("?")[1]?.split("=")[1];
-    
-    // Only redirect if we're not in the auth group, admin group, not on the index page, and not on the screens
-    if (!inAuthGroup && !inAdminGroup && !isIndex && 
-        !isTransactionsScreen && 
-        !isCardManagementScreen && 
-        !isDevicesScreen && 
-        !isNewsScreen && 
-        !isReceiversScreen && 
-        !isMakeTransactionScreen && 
-        !["home", "profile", "request-card", "settings"].includes(segments[0])) {
-      router.replace("/");
+    const inAuthGroup = segments[0] === '(auth)';
+    const inAdminGroup = segments[0] === '(admin)';
+    const inScreensGroup = segments[0] === 'screens';
+    const inHomeGroup = segments[0] === 'home';
+
+    // Get customerId from URL if it exists
+    const url = new URL(window.location.href);
+    const customerId = url.searchParams.get('customerId');
+
+    if (!inAuthGroup && !inAdminGroup && !inScreensGroup && !inHomeGroup) {
+      // If we're not in any of the allowed groups, redirect to home
+      if (customerId) {
+        router.replace(`/home?customerId=${customerId}`);
+      } else {
+        router.replace('/');
+      }
     }
   }, [segments, isReady]);
 

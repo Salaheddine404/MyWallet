@@ -11,6 +11,10 @@ export default function AdminLayout() {
     >
       <Stack.Screen name="dashboard" />
       <Stack.Screen name="profile" />
+      <Stack.Screen name="clients" />
+      <Stack.Screen name="card-activation" />
+      <Stack.Screen name="transactions" />
+      <Stack.Screen name="missing-cards" />
     </Stack>
   );
 } 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ActivityIndicator } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ActivityIndicator, Alert } from "react-native";
 import { useState } from "react";
 import { router } from "expo-router";
 import { colors } from "../theme/colors";
@@ -27,18 +27,15 @@ export default function LoginScreen() {
     try {
       // Check for admin credentials
       if (customerId === '100001' && password === 'adm01') {
-        // Navigate to admin dashboard
         router.replace('/(admin)/dashboard');
-      } else {
-        // Regular user login
-        router.push({
-          pathname: '/screens/home',
-          params: { customerId }
-        });
+        return;
       }
-    } catch (err) {
-      console.error('Login error:', err);
-      setError("An error occurred. Please try again.");
+
+      // For regular users
+      router.push(`/home?customerId=${customerId}`);
+    } catch (error) {
+      console.error('Login error:', error);
+      Alert.alert('Error', 'Failed to login. Please try again.');
     } finally {
       setIsLoading(false);
     }

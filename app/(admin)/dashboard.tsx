@@ -13,10 +13,10 @@ export default function AdminDashboard() {
   ];
 
   const recentActivities = [
-    { id: 1, action: 'New user registered', time: '2 minutes ago' },
-    { id: 2, action: 'Card activated', time: '15 minutes ago' },
-    { id: 3, action: 'Large transaction processed', time: '1 hour ago' },
-    { id: 4, action: 'System update completed', time: '2 hours ago' },
+    { id: 1, action: 'My Clients', time: '2 minutes ago', route: '/clients' },
+    { id: 2, action: 'Card Activation', time: '15 minutes ago', route: '/card-activation' },
+    { id: 3, action: 'Transactions', time: '1 hour ago', route: '/transactions' },
+    { id: 4, action: 'Missing Cards', time: '2 hours ago', route: '/missing-cards' },
   ];
 
   return (
@@ -43,17 +43,21 @@ export default function AdminDashboard() {
           ))}
         </View>
 
-        {/* Recent Activities */}
+        {/* Clients Handling Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Recent Activities</Text>
+          <Text style={styles.sectionTitle}>Clients Handling</Text>
           {recentActivities.map((activity) => (
-            <View key={activity.id} style={styles.activityCard}>
+            <TouchableOpacity 
+              key={activity.id} 
+              style={styles.activityCard}
+              onPress={() => router.push(activity.route)}
+            >
               <View style={styles.activityContent}>
                 <Text style={styles.activityText}>{activity.action}</Text>
                 <Text style={styles.activityTime}>{activity.time}</Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color={colors.gray[400]} />
-            </View>
+            </TouchableOpacity>
           ))}
         </View>
 
