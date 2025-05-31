@@ -239,8 +239,9 @@ export default function HomeScreen() {
   if (isLoading) {
     return (
       <ImageBackground
-        source={require('../../assets/images/background.webp')}
+        source={require('../../assets/images/homescreenback.webp')}
         style={styles.backgroundImage}
+        resizeMode="cover"
       >
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
@@ -266,8 +267,9 @@ export default function HomeScreen() {
         ]}
       >
         <ImageBackground
-          source={require('../../assets/images/background.webp')}
+          source={require('../../assets/images/homescreenback.webp')}
           style={styles.backgroundImage}
+          resizeMode="cover"
         >
           <View style={styles.header}>
             <TouchableOpacity onPress={toggleDrawer} style={styles.menuButton}>
@@ -401,7 +403,7 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     width: DRAWER_WIDTH,
-    backgroundColor: '#2D1B4D',
+    backgroundColor: 'rgba(45, 27, 77, 0.95)',
     padding: 20,
     zIndex: 1000,
   },
@@ -457,6 +459,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     paddingTop: 40,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   menuButton: {
     padding: 10,
@@ -485,8 +488,11 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     marginTop: 10,
-    color: colors.text.primary,
+    color: colors.white,
     fontSize: 16,
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   errorContainer: {
     flex: 1,
@@ -496,9 +502,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   errorText: {
-    color: colors.status.error,
+    color: colors.white,
     fontSize: 16,
     textAlign: 'center',
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   cardsContainer: {
     padding: 15,
@@ -536,7 +545,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   activeButton: {
-    backgroundColor: colors.primary,
+    backgroundColor: '#00A36C',
   },
   inactiveButton: {
     backgroundColor: colors.gray[400],

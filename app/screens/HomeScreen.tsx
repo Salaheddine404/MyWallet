@@ -1,4 +1,4 @@
-import { View, FlatList, Text, StyleSheet, ActivityIndicator } from "react-native";
+import { View, FlatList, Text, StyleSheet, ActivityIndicator, ImageBackground } from "react-native";
 import { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { fetchCardList } from "../services/cardlist";
@@ -46,39 +46,61 @@ export default function HomeScreen() {
 
   if (loading) {
     return (
-      <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color={colors.primary} />
-      </View>
+      <ImageBackground
+        source={require('../../assets/images/homescreenback.webp')}
+        style={styles.backgroundImage}
+        resizeMode="cover"
+      >
+        <View style={styles.centerContainer}>
+          <ActivityIndicator size="large" color={colors.primary} />
+        </View>
+      </ImageBackground>
     );
   }
 
   if (error) {
     return (
-      <View style={styles.centerContainer}>
-        <Text style={styles.errorText}>{error}</Text>
-      </View>
+      <ImageBackground
+        source={require('../../assets/images/homescreenback.webp')}
+        style={styles.backgroundImage}
+        resizeMode="cover"
+      >
+        <View style={styles.centerContainer}>
+          <Text style={styles.errorText}>{error}</Text>
+        </View>
+      </ImageBackground>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <FlatList
-          data={cards}
-          keyExtractor={(item) => item.card.toString()}
-          renderItem={({ item }) => <CardItem card={item} />}
-          ListEmptyComponent={
-            <View style={styles.centerContainer}>
-              <Text style={styles.emptyText}>No cards available</Text>
-            </View>
-          }
-        />
+    <ImageBackground
+      source={require('../../assets/images/homescreenback.webp')}
+      style={styles.backgroundImage}
+      resizeMode="cover"
+    >
+      <View style={styles.container}>
+        <View style={styles.content}>
+          <FlatList
+            data={cards}
+            keyExtractor={(item) => item.card.toString()}
+            renderItem={({ item }) => <CardItem card={item} />}
+            ListEmptyComponent={
+              <View style={styles.centerContainer}>
+                <Text style={styles.emptyText}>No cards available</Text>
+              </View>
+            }
+          />
+        </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+  },
   container: {
     flex: 1,
   },
@@ -92,15 +114,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   errorText: {
-    color: colors.status.error,
+    color: colors.white,
     fontSize: 16,
     textAlign: "center",
     padding: 20,
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   emptyText: {
-    color: colors.text.secondary,
+    color: colors.white,
     fontSize: 16,
     textAlign: "center",
     padding: 20,
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
 });
