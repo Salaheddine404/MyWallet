@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ActivityIndicator, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ActivityIndicator, Alert, ImageBackground } from "react-native";
 import { useState } from "react";
 import { router } from "expo-router";
 import { colors } from "../theme/colors";
@@ -42,76 +42,87 @@ export default function LoginScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
+    <ImageBackground
+      source={require('../../assets/images/loginback.webp')}
+      style={styles.backgroundImage}
+      resizeMode="cover"
     >
-      <View style={styles.content}>
-        {/* Form Section */}
-        <View style={styles.formContainer}>
-          <View style={styles.formContent}>
-            <View style={styles.inputGroup}>
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Enter your customer ID"
-                  placeholderTextColor={colors.gray[400]}
-                  value={customerId}
-                  onChangeText={(text) => {
-                    setCustomerId(text);
-                    setError("");
-                  }}
-                  keyboardType="numeric"
-                  autoCapitalize="none"
-                  autoFocus
-                />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+      >
+        <View style={styles.content}>
+          {/* Form Section */}
+          <View style={styles.formContainer}>
+            <View style={styles.formContent}>
+              <View style={styles.inputGroup}>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Enter your identifier"
+                    placeholderTextColor={colors.gray[400]}
+                    value={customerId}
+                    onChangeText={(text) => {
+                      setCustomerId(text);
+                      setError("");
+                    }}
+                    keyboardType="numeric"
+                    autoCapitalize="none"
+                    autoFocus
+                  />
+                </View>
               </View>
-            </View>
 
-            <View style={styles.inputGroup}>
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Enter password"
-                  placeholderTextColor={colors.gray[400]}
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry
-                  autoCapitalize="none"
-                />
+              <View style={styles.inputGroup}>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Enter password"
+                    placeholderTextColor={colors.gray[400]}
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry
+                    autoCapitalize="none"
+                  />
+                </View>
               </View>
+
+              {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
+              <TouchableOpacity
+                style={[styles.loginButton, isLoading && styles.loginButtonDisabled]} 
+                onPress={handleLogin}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <ActivityIndicator color={colors.white} />
+                ) : (
+                  <>
+                    <Text style={styles.loginButtonText}>
+                      Continue
+                    </Text>
+                    <Ionicons name="arrow-forward" size={20} color={colors.white} />
+                  </>
+                )}
+              </TouchableOpacity>
             </View>
-
-            {error ? <Text style={styles.errorText}>{error}</Text> : null}
-
-            <TouchableOpacity 
-              style={[styles.loginButton, isLoading && styles.loginButtonDisabled]} 
-              onPress={handleLogin}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <ActivityIndicator color={colors.white} />
-              ) : (
-                <>
-                  <Text style={styles.loginButtonText}>
-                    Continue
-                  </Text>
-                  <Ionicons name="arrow-forward" size={20} color={colors.white} />
-                </>
-              )}
-            </TouchableOpacity>
           </View>
-        </View>
 
-        <Text style={styles.footerText}>
-          © 2025 Bolt Bank. All rights reserved.
-        </Text>
-      </View>
-    </KeyboardAvoidingView>
+          <Text style={styles.footerText}>
+            © 2025 MyWallet Bank. All rights reserved.
+          </Text>
+        </View>
+      </KeyboardAvoidingView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
   container: {
     flex: 1,
     backgroundColor: 'transparent',
@@ -121,37 +132,38 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   formContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    marginHorizontal: 20,
-    borderRadius: 20,
-    padding: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.65)',
+    marginHorizontal: 30,
+    borderRadius: 25,
+    padding: 25,
     shadowColor: colors.black,
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.15,
     shadowRadius: 3.84,
-    elevation: 5,
+    elevation: 3,
+    backdropFilter: 'blur(10px)',
   },
   formContent: {
     width: '100%',
   },
   inputGroup: {
-    marginBottom: 20,
+    marginBottom: 25,
   },
   inputContainer: {
-    backgroundColor: colors.white,
-    borderRadius: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    borderRadius: 15,
     borderWidth: 1,
-    borderColor: colors.gray[200],
-    paddingHorizontal: 15,
-    height: 50,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    paddingHorizontal: 20,
+    height: 60,
     justifyContent: "center",
   },
   input: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 18,
     color: colors.text.primary,
   },
   errorText: {
@@ -161,7 +173,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   loginButton: {
-    backgroundColor: colors.primary,
+    backgroundColor: '#00A36C',
     borderRadius: 12,
     padding: 15,
     flexDirection: "row",
@@ -179,9 +191,12 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   footerText: {
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: 'rgba(255, 255, 255, 0.9)',
     textAlign: "center",
     fontSize: 12,
     marginTop: 20,
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
 });
