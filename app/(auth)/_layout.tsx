@@ -12,32 +12,36 @@ export default function AuthLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#7FFFD4',
-        tabBarInactiveTintColor: colors.gray[400],
+        tabBarActiveTintColor: '#FFFFFF',
+        tabBarInactiveTintColor: '#FFFFFF',
         tabBarStyle: {
-          backgroundColor: 'transparent',
+          backgroundColor: 'rgba(0, 0, 0, 0.4)',
           borderTopWidth: 0,
-          height: 60,
-          paddingBottom: 8,
-          paddingTop: 8,
+          height: 90,
+          paddingBottom: 10,
+          paddingTop: 20,
           elevation: 0,
           position: 'absolute',
-          bottom: 20,
-          left: 20,
-          right: 20,
-          borderRadius: 30,
+          bottom: 30,
+          left: 25,
+          right: 25,
+          borderRadius: 35,
           shadowColor: colors.black,
           shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 0.1,
-          shadowRadius: 8,
+          shadowOpacity: 0.15,
+          shadowRadius: 12,
+          backdropFilter: 'blur(10px)',
+          zIndex: 1,
         },
         tabBarLabelStyle: {
-          fontSize: 12,
+          fontSize: 14,
           fontWeight: '600',
-          marginTop: -5,
+          marginTop: 4,
+          color: '#FFFFFF',
         },
         tabBarItemStyle: {
-          padding: 5,
+          padding: 0,
+          marginTop: 8,
         },
         headerShown: false,
       }}
@@ -46,16 +50,19 @@ export default function AuthLayout() {
         name="home"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color, size, focused }) => (
+          tabBarIcon: ({ focused }) => (
             <View style={{
-              backgroundColor: focused ? 'rgba(127, 255, 212, 0.2)' : 'transparent',
-              padding: 8,
-              borderRadius: 20,
+              backgroundColor: focused ? 'rgba(255, 255, 255, 0.3)' : 'transparent',
+              padding: 12,
+              borderRadius: 25,
+              marginBottom: 4,
+              alignItems: 'center',
+              justifyContent: 'center',
             }}>
               <Ionicons 
-                name={focused ? "home" : "home-outline"} 
-                size={size} 
-                color={color} 
+                name="home" 
+                size={32} 
+                color="#FFFFFF" 
               />
             </View>
           ),
@@ -66,16 +73,19 @@ export default function AuthLayout() {
         name="request-card"
         options={{
           title: 'Request Card',
-          tabBarIcon: ({ color, size, focused }) => (
+          tabBarIcon: ({ focused }) => (
             <View style={{
-              backgroundColor: focused ? 'rgba(127, 255, 212, 0.2)' : 'transparent',
-              padding: 8,
-              borderRadius: 20,
+              backgroundColor: focused ? 'rgba(255, 255, 255, 0.3)' : 'transparent',
+              padding: 12,
+              borderRadius: 25,
+              marginBottom: 4,
+              alignItems: 'center',
+              justifyContent: 'center',
             }}>
               <Ionicons 
-                name={focused ? "card" : "card-outline"} 
-                size={size} 
-                color={color} 
+                name="card" 
+                size={32} 
+                color="#FFFFFF" 
               />
             </View>
           ),
@@ -86,16 +96,19 @@ export default function AuthLayout() {
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ color, size, focused }) => (
+          tabBarIcon: ({ focused }) => (
             <View style={{
-              backgroundColor: focused ? 'rgba(127, 255, 212, 0.2)' : 'transparent',
-              padding: 8,
-              borderRadius: 20,
+              backgroundColor: focused ? 'rgba(255, 255, 255, 0.3)' : 'transparent',
+              padding: 12,
+              borderRadius: 25,
+              marginBottom: 4,
+              alignItems: 'center',
+              justifyContent: 'center',
             }}>
               <Ionicons 
-                name={focused ? "person" : "person-outline"} 
-                size={size} 
-                color={color} 
+                name="person" 
+                size={32} 
+                color="#FFFFFF" 
               />
             </View>
           ),
@@ -106,16 +119,19 @@ export default function AuthLayout() {
         name="settings-screen"
         options={{
           title: 'Settings',
-          tabBarIcon: ({ color, size, focused }) => (
+          tabBarIcon: ({ focused }) => (
             <View style={{
-              backgroundColor: focused ? 'rgba(127, 255, 212, 0.2)' : 'transparent',
-              padding: 8,
-              borderRadius: 20,
+              backgroundColor: focused ? 'rgba(255, 255, 255, 0.3)' : 'transparent',
+              padding: 12,
+              borderRadius: 25,
+              marginBottom: 4,
+              alignItems: 'center',
+              justifyContent: 'center',
             }}>
               <Ionicons 
-                name={focused ? "cog" : "cog-outline"} 
-                size={size} 
-                color={color} 
+                name="settings" 
+                size={32} 
+                color="#FFFFFF" 
               />
             </View>
           ),

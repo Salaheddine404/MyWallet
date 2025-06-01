@@ -20,7 +20,7 @@ export default function SettingsScreen() {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/background.webp')}
+      source={require('../../assets/images/loginback.webp')}
       style={styles.backgroundImage}
     >
       <ScrollView style={styles.container}>

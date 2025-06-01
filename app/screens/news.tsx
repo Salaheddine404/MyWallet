@@ -55,7 +55,7 @@ export default function NewsScreen() {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/background.webp')}
+      source={require('../../assets/images/drawer.webp')}
       style={styles.backgroundImage}
     >
       <View style={styles.header}>

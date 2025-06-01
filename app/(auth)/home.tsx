@@ -157,82 +157,88 @@ export default function HomeScreen() {
         },
       ]}
     >
-      <View style={styles.drawerHeader}>
-        <TouchableOpacity 
-          style={styles.closeButton} 
-          onPress={toggleDrawer}
-        >
-          <Ionicons name="close" size={24} color={colors.white} />
-        </TouchableOpacity>
-        <View style={styles.drawerAvatar}>
-          <Ionicons name="person" size={40} color={colors.white} />
-        </View>
-        <Text style={styles.drawerName}>SAAID TALIBI</Text>
-      </View>
-      
-      <View style={styles.drawerContent}>
-        {/* My News Section */}
-        <View style={styles.drawerSection}>
-          <Text style={styles.sectionTitle}>My News</Text>
+      <ImageBackground
+        source={require('../../assets/images/drawerback.webp')}
+        style={StyleSheet.absoluteFill}
+        resizeMode="cover"
+      >
+        <View style={styles.drawerHeader}>
           <TouchableOpacity 
-            style={styles.drawerItem} 
-            onPress={() => handleDrawerNavigation('/screens/news')}
+            style={styles.closeButton} 
+            onPress={toggleDrawer}
           >
-            <Ionicons name="newspaper-outline" size={24} color={colors.white} />
-            <Text style={styles.drawerItemText}>News</Text>
+            <Ionicons name="close" size={32} color={colors.white} />
           </TouchableOpacity>
-          <TouchableOpacity 
-            style={styles.drawerItem} 
-            onPress={() => handleDrawerNavigation('/screens/devices')}
-          >
-            <Ionicons name="phone-portrait-outline" size={24} color={colors.white} />
-            <Text style={styles.drawerItemText}>Devises</Text>
-          </TouchableOpacity>
+          <View style={styles.drawerAvatar}>
+            <Ionicons name="person" size={50} color={colors.white} />
+          </View>
+          <Text style={styles.drawerName}>SAAID TALIBI</Text>
         </View>
+        
+        <View style={styles.drawerContent}>
+          {/* My News Section */}
+          <View style={styles.drawerSection}>
+            <Text style={styles.sectionTitle}>My News</Text>
+            <TouchableOpacity 
+              style={styles.drawerItem} 
+              onPress={() => handleDrawerNavigation('/screens/news')}
+            >
+              <Ionicons name="newspaper-outline" size={28} color={colors.white} />
+              <Text style={styles.drawerItemText}>News</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.drawerItem} 
+              onPress={() => handleDrawerNavigation('/screens/devices')}
+            >
+              <Ionicons name="phone-portrait-outline" size={28} color={colors.white} />
+              <Text style={styles.drawerItemText}>Devises</Text>
+            </TouchableOpacity>
+          </View>
 
-        {/* My Operations Section */}
-        <View style={styles.drawerSection}>
-          <Text style={styles.sectionTitle}>My Operations</Text>
-          <TouchableOpacity 
-            style={styles.drawerItem} 
-            onPress={() => handleDrawerNavigation('/screens/make-transaction')}
-          >
-            <Ionicons name="swap-horizontal-outline" size={24} color={colors.white} />
-            <Text style={styles.drawerItemText}>Make Transaction</Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={styles.drawerItem} 
-            onPress={() => handleDrawerNavigation('/screens/receivers')}
-          >
-            <Ionicons name="people-outline" size={24} color={colors.white} />
-            <Text style={styles.drawerItemText}>Bénéficiaires</Text>
-          </TouchableOpacity>
-        </View>
+          {/* My Operations Section */}
+          <View style={styles.drawerSection}>
+            <Text style={styles.sectionTitle}>My Operations</Text>
+            <TouchableOpacity 
+              style={styles.drawerItem} 
+              onPress={() => handleDrawerNavigation('/screens/make-transaction')}
+            >
+              <Ionicons name="swap-horizontal-outline" size={28} color={colors.white} />
+              <Text style={styles.drawerItemText}>Make Transaction</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.drawerItem} 
+              onPress={() => handleDrawerNavigation('/screens/receivers')}
+            >
+              <Ionicons name="people-outline" size={28} color={colors.white} />
+              <Text style={styles.drawerItemText}>Bénéficiaires</Text>
+            </TouchableOpacity>
+          </View>
 
-        {/* Online Service Section */}
-        <View style={styles.drawerSection}>
-          <Text style={styles.sectionTitle}>Online Service</Text>
-          <TouchableOpacity 
-            style={styles.drawerItem} 
-            onPress={() => handleDrawerNavigation('/screens/my-benefits')}
-          >
-            <Ionicons name="gift-outline" size={24} color={colors.white} />
-            <Text style={styles.drawerItemText}>My Benefits</Text>
-          </TouchableOpacity>
-        </View>
+          {/* Online Service Section */}
+          <View style={styles.drawerSection}>
+            <Text style={styles.sectionTitle}>Online Service</Text>
+            <TouchableOpacity 
+              style={styles.drawerItem} 
+              onPress={() => handleDrawerNavigation('/screens/my-benefits')}
+            >
+              <Ionicons name="gift-outline" size={28} color={colors.white} />
+              <Text style={styles.drawerItemText}>My Benefits</Text>
+            </TouchableOpacity>
+          </View>
 
-        {/* Assistance Section */}
-        <View style={styles.drawerSection}>
-          <Text style={styles.sectionTitle}>Assistance</Text>
-          <TouchableOpacity 
-            style={styles.drawerItem} 
-            onPress={() => handleDrawerNavigation('/screens/client-relation')}
-          >
-            <Ionicons name="headset-outline" size={24} color={colors.white} />
-            <Text style={styles.drawerItemText}>Client Relation</Text>
-          </TouchableOpacity>
+          {/* Assistance Section */}
+          <View style={styles.drawerSection}>
+            <Text style={styles.sectionTitle}>Assistance</Text>
+            <TouchableOpacity 
+              style={styles.drawerItem} 
+              onPress={() => handleDrawerNavigation('/screens/client-relation')}
+            >
+              <Ionicons name="headset-outline" size={28} color={colors.white} />
+              <Text style={styles.drawerItemText}>Client Relation</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      </ImageBackground>
     </Animated.View>
   );
 
@@ -263,6 +269,7 @@ export default function HomeScreen() {
               { scale: mainScale },
             ],
             opacity: mainOpacity,
+            zIndex: 1,
           },
         ]}
       >
@@ -396,6 +403,7 @@ const styles = StyleSheet.create({
   mainContent: {
     flex: 1,
     backgroundColor: 'transparent',
+    zIndex: 1,
   },
   drawer: {
     position: 'absolute',
@@ -403,56 +411,58 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     width: DRAWER_WIDTH,
-    backgroundColor: 'rgba(45, 27, 77, 0.95)',
+    backgroundColor: 'transparent',
     padding: 20,
     zIndex: 1000,
   },
   drawerHeader: {
     alignItems: 'center',
-    paddingVertical: 20,
+    paddingVertical: 40,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(255,255,255,0.1)',
+    marginTop: 60,
   },
   drawerAvatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
     backgroundColor: 'rgba(255,255,255,0.1)',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 15,
   },
   drawerName: {
     color: colors.white,
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
   },
   drawerContent: {
-    marginTop: 20,
+    marginTop: 30,
+    paddingHorizontal: 15,
   },
   drawerSection: {
-    marginBottom: 20,
+    marginBottom: 30,
   },
   sectionTitle: {
     color: colors.white,
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: '600',
     opacity: 0.7,
-    marginBottom: 10,
+    marginBottom: 15,
     paddingHorizontal: 15,
   },
   drawerItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 15,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(255,255,255,0.1)',
   },
   drawerItemText: {
     color: colors.white,
-    fontSize: 16,
-    marginLeft: 15,
+    fontSize: 18,
+    marginLeft: 20,
   },
   header: {
     flexDirection: 'row',
@@ -511,6 +521,7 @@ const styles = StyleSheet.create({
   },
   cardsContainer: {
     padding: 15,
+    paddingBottom: 120,
   },
   cardWrapper: {
     marginBottom: 20,
@@ -560,7 +571,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     right: 10,
-    padding: 8,
+    padding: 12,
     zIndex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    borderRadius: 25,
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

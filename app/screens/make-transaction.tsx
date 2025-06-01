@@ -78,7 +78,7 @@ export default function MakeTransactionScreen() {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/background.webp')}
+      source={require('../../assets/images/drawer.webp')}
       style={styles.backgroundImage}
     >
       <View style={styles.header}>
@@ -250,11 +250,16 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   submitButton: {
-    backgroundColor: colors.primary,
+    backgroundColor: '#00A36C',
     borderRadius: 12,
     padding: 20,
     alignItems: 'center',
     marginTop: 20,
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5,
   },
   submitButtonText: {
     color: colors.white,
