@@ -7,73 +7,87 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
-  Alert,
 } from 'react-native';
-import { useRouter, useNavigation } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
 import { useTransactionStore } from '../store/transactionStore';
+import TransactionConfirmation from '../components/TransactionConfirmation';
 
 export default function MakeTransactionScreen() {
   const router = useRouter();
-  const navigation = useNavigation();
   const { balance, updateBalance, addTransaction } = useTransactionStore();
   const [beneficiaryName, setBeneficiaryName] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [confirmationType, setConfirmationType] = useState<'success' | 'error'>('success');
+  const [confirmationMessage, setConfirmationMessage] = useState('');
+  const [confirmationSubMessage, setConfirmationSubMessage] = useState('');
 
   const handleBack = () => {
-    // Navigate back to the drawer
     router.back();
   };
 
   const handleTransaction = () => {
     // Validate inputs
     if (!beneficiaryName || !accountNumber || !amount) {
-      Alert.alert('Error', 'Please fill in all required fields');
+      setConfirmationType('error');
+      setConfirmationMessage('Missing Information');
+      setConfirmationSubMessage('Please fill in all required fields');
+      setShowConfirmation(true);
+      return;
+    }
+
+    if (accountNumber.length !== 14) {
+      setConfirmationType('error');
+      setConfirmationMessage('Invalid Account Number');
+      setConfirmationSubMessage('Please enter a valid 14-digit account number');
+      setShowConfirmation(true);
       return;
     }
 
     const transactionAmount = parseFloat(amount);
     if (isNaN(transactionAmount) || transactionAmount <= 0) {
-      Alert.alert('Error', 'Please enter a valid amount');
+      setConfirmationType('error');
+      setConfirmationMessage('Invalid Amount');
+      setConfirmationSubMessage('Please enter a valid amount greater than 0');
+      setShowConfirmation(true);
       return;
     }
 
-    // Check if sufficient balance
     if (transactionAmount > balance) {
-      Alert.alert('Error', 'Insufficient balance');
+      setConfirmationType('error');
+      setConfirmationMessage('Insufficient Balance');
+      setConfirmationSubMessage('You don\'t have enough funds to complete this transaction');
+      setShowConfirmation(true);
       return;
     }
 
-    // Update balance and add transaction
-    updateBalance(transactionAmount);
+    setConfirmationType('success');
+    setConfirmationMessage('Confirm Transaction');
+    setConfirmationSubMessage(`Are you sure you want to send ${amount} MAD to ${beneficiaryName}?`);
+    setShowConfirmation(true);
+  };
+
+  const handleConfirmTransaction = () => {
+    updateBalance(parseFloat(amount));
     addTransaction({
       sender: 'Said Talibi', // This should come from user profile
       receiver: beneficiaryName,
-      amount: transactionAmount,
+      amount: parseFloat(amount),
       description: description || 'Transaction',
+      accountNumber: accountNumber,
     });
 
-    // Show success message
-    Alert.alert(
-      'Success',
-      `Transaction of ${amount} MAD to ${beneficiaryName} completed successfully`,
-      [
-        {
-          text: 'OK',
-          onPress: () => {
-            // Clear the form and navigate back to drawer
-            setBeneficiaryName('');
-            setAccountNumber('');
-            setAmount('');
-            setDescription('');
-            handleBack();
-          },
-        },
-      ]
-    );
+    // Clear the form and navigate back
+    setBeneficiaryName('');
+    setAccountNumber('');
+    setAmount('');
+    setDescription('');
+    setShowConfirmation(false);
+    handleBack();
   };
 
   return (
@@ -99,39 +113,47 @@ export default function MakeTransactionScreen() {
           {/* Beneficiary Name Input */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Beneficiary Name</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter beneficiary name"
-              placeholderTextColor={colors.gray[400]}
-              value={beneficiaryName}
-              onChangeText={setBeneficiaryName}
-            />
+            <View style={styles.inputContainer}>
+              <Ionicons name="person-outline" size={24} color={colors.gray[300]} style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                placeholder="Enter beneficiary name"
+                placeholderTextColor={colors.gray[400]}
+                value={beneficiaryName}
+                onChangeText={setBeneficiaryName}
+              />
+            </View>
           </View>
 
           {/* Account Number Input */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Account Number</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter account number"
-              placeholderTextColor={colors.gray[400]}
-              keyboardType="numeric"
-              value={accountNumber}
-              onChangeText={setAccountNumber}
-            />
+            <View style={styles.inputContainer}>
+              <Ionicons name="card-outline" size={24} color={colors.gray[300]} style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                placeholder="Enter 14-digit account number"
+                placeholderTextColor={colors.gray[400]}
+                keyboardType="numeric"
+                value={accountNumber}
+                onChangeText={(text) => setAccountNumber(text.replace(/[^0-9]/g, '').slice(0, 14))}
+                maxLength={14}
+              />
+            </View>
           </View>
 
           {/* Amount Input */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Amount</Text>
-            <View style={styles.amountContainer}>
+            <View style={styles.inputContainer}>
+              <Ionicons name="cash-outline" size={24} color={colors.gray[300]} style={styles.inputIcon} />
               <TextInput
-                style={styles.amountInput}
+                style={styles.input}
                 placeholder="Enter amount"
                 placeholderTextColor={colors.gray[400]}
-                keyboardType="numeric"
+                keyboardType="decimal-pad"
                 value={amount}
-                onChangeText={setAmount}
+                onChangeText={(text) => setAmount(text.replace(/[^0-9.]/g, ''))}
               />
               <Text style={styles.currency}>MAD</Text>
             </View>
@@ -140,14 +162,17 @@ export default function MakeTransactionScreen() {
           {/* Description Input */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Description (Optional)</Text>
-            <TextInput
-              style={styles.descriptionInput}
-              placeholder="Add a description"
-              placeholderTextColor={colors.gray[400]}
-              multiline
-              value={description}
-              onChangeText={setDescription}
-            />
+            <View style={styles.inputContainer}>
+              <Ionicons name="document-text-outline" size={24} color={colors.gray[300]} style={styles.inputIcon} />
+              <TextInput
+                style={[styles.input, styles.descriptionInput]}
+                placeholder="Add a description"
+                placeholderTextColor={colors.gray[400]}
+                multiline
+                value={description}
+                onChangeText={setDescription}
+              />
+            </View>
           </View>
 
           {/* Submit Button */}
@@ -159,6 +184,15 @@ export default function MakeTransactionScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      <TransactionConfirmation
+        visible={showConfirmation}
+        onClose={() => setShowConfirmation(false)}
+        onConfirm={handleConfirmTransaction}
+        type={confirmationType}
+        message={confirmationMessage}
+        subMessage={confirmationSubMessage}
+      />
     </ImageBackground>
   );
 }
@@ -190,11 +224,13 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   balanceContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
     borderRadius: 16,
     padding: 20,
     marginBottom: 25,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   balanceLabel: {
     color: colors.gray[400],
@@ -215,42 +251,33 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 15,
   },
-  input: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 12,
-    padding: 15,
-    color: colors.white,
-    fontSize: 16,
-  },
-  amountContainer: {
+  inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 12,
     paddingHorizontal: 15,
   },
-  amountInput: {
+  inputIcon: {
+    marginRight: 12,
+  },
+  input: {
     flex: 1,
     color: colors.white,
-    fontSize: 18,
+    fontSize: 16,
     paddingVertical: 15,
+  },
+  descriptionInput: {
+    minHeight: 100,
+    textAlignVertical: 'top',
   },
   currency: {
     color: colors.gray[400],
     fontSize: 16,
     marginLeft: 10,
   },
-  descriptionInput: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 12,
-    padding: 15,
-    color: colors.white,
-    fontSize: 16,
-    minHeight: 100,
-    textAlignVertical: 'top',
-  },
   submitButton: {
-    backgroundColor: '#00A36C',
+    backgroundColor: colors.primary,
     borderRadius: 12,
     padding: 20,
     alignItems: 'center',
