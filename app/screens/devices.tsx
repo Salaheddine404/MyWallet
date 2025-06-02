@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -6,98 +6,47 @@ import {
   ScrollView,
   ImageBackground,
   TouchableOpacity,
-  Dimensions,
+  ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
-
-const { width } = Dimensions.get('window');
+import { getExchangeRates, ExchangeRate } from '../services/exchangeRates';
 
 export default function DevisesScreen() {
   const router = useRouter();
+  const [currencies, setCurrencies] = useState<ExchangeRate[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const currencies = [
-    {
-      flag: '🇪🇺',
-      currency: 'EUR',
-      value: '11.25 MAD'
-    },
-    {
-      flag: '🇺🇸',
-      currency: 'USD',
-      value: '10.15 MAD'
-    },
-    {
-      flag: '🇬🇧',
-      currency: 'GBP',
-      value: '12.85 MAD'
-    },
-    {
-      flag: '🇨🇭',
-      currency: 'CHF',
-      value: '11.45 MAD'
-    },
-    {
-      flag: '🇦🇪',
-      currency: 'AED',
-      value: '2.76 MAD'
-    },
-    {
-      flag: '🇸🇦',
-      currency: 'SAR',
-      value: '2.70 MAD'
-    },
-    {
-      flag: '🇶🇦',
-      currency: 'QAR',
-      value: '2.78 MAD'
-    },
-    {
-      flag: '🇰🇼',
-      currency: 'KWD',
-      value: '33.15 MAD'
-    },
-    {
-      flag: '🇧🇭',
-      currency: 'BHD',
-      value: '26.95 MAD'
-    },
-    {
-      flag: '🇴🇲',
-      currency: 'OMR',
-      value: '26.35 MAD'
-    },
-    {
-      flag: '🇯🇵',
-      currency: 'JPY',
-      value: '0.068 MAD'
-    },
-    {
-      flag: '🇨🇳',
-      currency: 'CNY',
-      value: '1.42 MAD'
-    },
-    {
-      flag: '🇨🇦',
-      currency: 'CAD',
-      value: '7.45 MAD'
-    },
-    {
-      flag: '🇦🇺',
-      currency: 'AUD',
-      value: '6.75 MAD'
-    },
-    {
-      flag: '🇳🇿',
-      currency: 'NZD',
-      value: '6.25 MAD'
+  const loadExchangeRates = async () => {
+    try {
+      setError(null);
+      const rates = await getExchangeRates();
+      setCurrencies(rates);
+    } catch (err) {
+      setError('Failed to load exchange rates. Please try again.');
+      console.error('Error loading exchange rates:', err);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
     }
-  ];
+  };
+
+  useEffect(() => {
+    loadExchangeRates();
+  }, []);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    loadExchangeRates();
+  };
 
   return (
     <ImageBackground
-      source={require('../../assets/images/background.webp')}
+      source={require('../../assets/images/drawerback.webp')}
       style={styles.backgroundImage}
     >
       <View style={styles.header}>
@@ -107,40 +56,66 @@ export default function DevisesScreen() {
         <Text style={styles.headerTitle}>Exchange Rates</Text>
       </View>
 
-      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        style={styles.container} 
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={colors.white}
+            colors={[colors.white]}
+          />
+        }
+      >
         <View style={styles.section}>
-          <View style={styles.tableContainer}>
-            {/* Table Header */}
-            <View style={styles.tableHeader}>
-              <View style={styles.flagHeaderContainer}>
-                <Text style={styles.headerCell}>Flag</Text>
-              </View>
-              <View style={styles.currencyHeaderContainer}>
-                <Text style={styles.headerCell}>Currency</Text>
-              </View>
-              <View style={styles.valueHeaderContainer}>
-                <Text style={styles.headerCell}>Value (MAD)</Text>
-              </View>
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color={colors.white} />
+              <Text style={styles.loadingText}>Loading exchange rates...</Text>
             </View>
-
-            {/* Table Rows */}
-            {currencies.map((item, index) => (
-              <View key={index} style={[
-                styles.tableRow,
-                index === currencies.length - 1 && styles.lastRow
-              ]}>
-                <View style={styles.flagContainer}>
-                  <Text style={styles.flagText}>{item.flag}</Text>
+          ) : error ? (
+            <View style={styles.errorContainer}>
+              <Ionicons name="alert-circle-outline" size={48} color={colors.status.error} />
+              <Text style={styles.errorText}>{error}</Text>
+              <TouchableOpacity style={styles.retryButton} onPress={loadExchangeRates}>
+                <Text style={styles.retryButtonText}>Try Again</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View style={styles.tableContainer}>
+              {/* Table Header */}
+              <View style={styles.tableHeader}>
+                <View style={styles.flagHeaderContainer}>
+                  <Text style={styles.headerCell}>Flag</Text>
                 </View>
-                <View style={styles.currencyContainer}>
-                  <Text style={styles.currencyText}>{item.currency}</Text>
+                <View style={styles.currencyHeaderContainer}>
+                  <Text style={styles.headerCell}>Currency</Text>
                 </View>
-                <View style={styles.valueContainer}>
-                  <Text style={styles.valueText}>{item.value}</Text>
+                <View style={styles.valueHeaderContainer}>
+                  <Text style={styles.headerCell}>Value (MAD)</Text>
                 </View>
               </View>
-            ))}
-          </View>
+
+              {/* Table Rows */}
+              {currencies.map((item, index) => (
+                <View key={index} style={[
+                  styles.tableRow,
+                  index === currencies.length - 1 && styles.lastRow
+                ]}>
+                  <View style={styles.flagContainer}>
+                    <Text style={styles.flagText}>{item.flag}</Text>
+                  </View>
+                  <View style={styles.currencyContainer}>
+                    <Text style={styles.currencyText}>{item.currency}</Text>
+                  </View>
+                  <View style={styles.valueContainer}>
+                    <Text style={styles.valueText}>{item.value}</Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+          )}
         </View>
       </ScrollView>
     </ImageBackground>
@@ -156,7 +131,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 20,
-    paddingTop: 40,
+    paddingTop: 60,
   },
   backButton: {
     padding: 10,
@@ -173,8 +148,43 @@ const styles = StyleSheet.create({
   section: {
     padding: 20,
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 40,
+  },
+  loadingText: {
+    color: colors.white,
+    fontSize: 16,
+    marginTop: 12,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 40,
+  },
+  errorText: {
+    color: colors.white,
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 12,
+    marginBottom: 20,
+  },
+  retryButton: {
+    backgroundColor: colors.primary,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
+  retryButtonText: {
+    color: colors.white,
+    fontSize: 16,
+    fontWeight: '600',
+  },
   tableContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'rgba(0, 0, 0, 0.15)',
     borderRadius: 20,
     overflow: 'hidden',
     marginTop: 20,
@@ -186,7 +196,7 @@ const styles = StyleSheet.create({
   },
   tableHeader: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     paddingVertical: 20,
     paddingHorizontal: 15,
     borderBottomWidth: 2,
