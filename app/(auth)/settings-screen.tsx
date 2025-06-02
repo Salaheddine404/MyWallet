@@ -2,10 +2,13 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground }
 import { colors } from '../theme/colors';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import LogoutConfirmation from '../components/LogoutConfirmation';
+import { useState } from 'react';
 
 export default function SettingsScreen() {
   const { customerId } = useLocalSearchParams();
   const router = useRouter();
+  const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
 
   const handleTransactionsPress = () => {
     router.push({
@@ -15,6 +18,11 @@ export default function SettingsScreen() {
   };
 
   const handleLogout = () => {
+    setShowLogoutConfirmation(true);
+  };
+
+  const handleConfirmLogout = () => {
+    setShowLogoutConfirmation(false);
     router.replace("/");
   };
 
@@ -28,54 +36,74 @@ export default function SettingsScreen() {
           <Text style={styles.sectionTitle}>Settings</Text>
           <View style={styles.settingsCard}>
             <TouchableOpacity style={styles.settingItem} onPress={handleTransactionsPress}>
-              <Ionicons name="time-outline" size={24} color={colors.primary} />
+              <View style={styles.iconContainer}>
+                <Ionicons name="time-outline" size={24} color={colors.primary} />
+              </View>
               <Text style={styles.settingText}>Transaction History</Text>
-              <Ionicons name="chevron-forward" size={24} color={colors.gray[400]} style={styles.chevron} />
+              <Ionicons name="chevron-forward" size={24} color={colors.primary} style={styles.chevron} />
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.settingItem} onPress={() => router.push({ pathname: '/screens/card-management', params: { customerId } })}>
-              <Ionicons name="alert-circle-outline" size={24} color={colors.primary} />
+              <View style={styles.iconContainer}>
+                <Ionicons name="card-outline" size={24} color={colors.primary} />
+              </View>
               <Text style={styles.settingText}>Card Management</Text>
-              <Ionicons name="chevron-forward" size={24} color={colors.gray[400]} style={styles.chevron} />
+              <Ionicons name="chevron-forward" size={24} color={colors.primary} style={styles.chevron} />
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.settingItem}>
-              <Ionicons name="notifications-outline" size={24} color={colors.primary} />
+              <View style={styles.iconContainer}>
+                <Ionicons name="notifications-outline" size={24} color={colors.primary} />
+              </View>
               <Text style={styles.settingText}>Notifications</Text>
-              <Ionicons name="chevron-forward" size={24} color={colors.gray[400]} style={styles.chevron} />
+              <Ionicons name="chevron-forward" size={24} color={colors.primary} style={styles.chevron} />
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.settingItem}>
-              <Ionicons name="lock-closed-outline" size={24} color={colors.primary} />
+              <View style={styles.iconContainer}>
+                <Ionicons name="lock-closed-outline" size={24} color={colors.primary} />
+              </View>
               <Text style={styles.settingText}>Security</Text>
-              <Ionicons name="chevron-forward" size={24} color={colors.gray[400]} style={styles.chevron} />
+              <Ionicons name="chevron-forward" size={24} color={colors.primary} style={styles.chevron} />
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.settingItem}>
-              <Ionicons name="language-outline" size={24} color={colors.primary} />
+              <View style={styles.iconContainer}>
+                <Ionicons name="language-outline" size={24} color={colors.primary} />
+              </View>
               <Text style={styles.settingText}>Language</Text>
-              <Ionicons name="chevron-forward" size={24} color={colors.gray[400]} style={styles.chevron} />
+              <Ionicons name="chevron-forward" size={24} color={colors.primary} style={styles.chevron} />
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.settingItem}>
-              <Ionicons name="help-circle-outline" size={24} color={colors.primary} />
+              <View style={styles.iconContainer}>
+                <Ionicons name="help-circle-outline" size={24} color={colors.primary} />
+              </View>
               <Text style={styles.settingText}>Help & Support</Text>
-              <Ionicons name="chevron-forward" size={24} color={colors.gray[400]} style={styles.chevron} />
+              <Ionicons name="chevron-forward" size={24} color={colors.primary} style={styles.chevron} />
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.settingItem}>
-              <Ionicons name="information-circle-outline" size={24} color={colors.primary} />
+              <View style={styles.iconContainer}>
+                <Ionicons name="information-circle-outline" size={24} color={colors.primary} />
+              </View>
               <Text style={styles.settingText}>About</Text>
-              <Ionicons name="chevron-forward" size={24} color={colors.gray[400]} style={styles.chevron} />
+              <Ionicons name="chevron-forward" size={24} color={colors.primary} style={styles.chevron} />
             </TouchableOpacity>
           </View>
 
           <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-            <Ionicons name="log-out-outline" size={24} color={colors.status.error} />
+            <Ionicons name="log-out-outline" size={24} color={colors.white} />
             <Text style={styles.logoutText}>Log Out</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      <LogoutConfirmation
+        visible={showLogoutConfirmation}
+        onClose={() => setShowLogoutConfirmation(false)}
+        onConfirm={handleConfirmLogout}
+      />
     </ImageBackground>
   );
 }
@@ -87,33 +115,49 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    paddingTop: 50,
   },
   section: {
     padding: 20,
   },
   sectionTitle: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     color: colors.white,
-    marginBottom: 15,
+    marginBottom: 25,
   },
   settingsCard: {
-    backgroundColor: '#4b71b4',
-    borderRadius: 15,
-    padding: 15,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    borderRadius: 20,
+    padding: 5,
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
   },
   settingItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 15,
+    paddingVertical: 16,
+    paddingHorizontal: 15,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.2)',
+    borderBottomColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  iconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 15,
   },
   settingText: {
     fontSize: 16,
     color: colors.white,
-    marginLeft: 15,
     flex: 1,
+    fontWeight: '500',
   },
   chevron: {
     marginLeft: 'auto',
@@ -122,10 +166,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#a40078',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 15,
-    padding: 15,
-    marginTop: 20,
+    padding: 16,
+    marginTop: 25,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
   },
   logoutText: {
     fontSize: 16,
