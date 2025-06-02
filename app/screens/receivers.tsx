@@ -25,7 +25,7 @@ export default function ReceiversScreen() {
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color={colors.white} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Bénéficiaires</Text>
+        <Text style={styles.headerTitle}>Beneficiaries</Text>
       </View>
 
       <View style={styles.container}>

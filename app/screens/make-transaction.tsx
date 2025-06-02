@@ -72,6 +72,13 @@ export default function MakeTransactionScreen() {
   };
 
   const handleConfirmTransaction = () => {
+    if (confirmationType === 'error') {
+      // If it's an error, just close the confirmation dialog
+      setShowConfirmation(false);
+      return;
+    }
+
+    // Only proceed with transaction if it's a success confirmation
     updateBalance(parseFloat(amount));
     addTransaction({
       sender: 'Said Talibi', // This should come from user profile

@@ -18,7 +18,7 @@ export default function ScreensLayout() {
       }}
     >
       <Stack.Screen
-        name="devices"
+        name="devises"
         options={{
           title: 'My Devises',
           gestureEnabled: true,
@@ -48,7 +48,7 @@ export default function ScreensLayout() {
       <Stack.Screen
         name="receivers"
         options={{
-          title: 'Bénéficiaires',
+          title: 'Beneficiaries',
           gestureEnabled: true,
         }}
       />

@@ -54,7 +54,7 @@ export default function CardManagementScreen() {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/background.webp')}
+      source={require('../../assets/images/drawer.webp')}
       style={styles.backgroundImage}
     >
       <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 30 }}>
@@ -109,6 +109,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    paddingTop: 60,
   },
   section: {
     padding: 20,
@@ -134,7 +135,6 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   cardsList: {
-    // No background, just spacing
     gap: 24,
   },
   cardBox: {

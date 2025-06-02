@@ -210,7 +210,7 @@ export default function HomeScreen() {
               onPress={() => handleDrawerNavigation('/screens/receivers')}
             >
               <Ionicons name="people-outline" size={28} color={colors.white} />
-              <Text style={styles.drawerItemText}>Bénéficiaires</Text>
+              <Text style={styles.drawerItemText}>Beneficiaries</Text>
             </TouchableOpacity>
           </View>
 
