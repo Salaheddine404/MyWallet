@@ -4,14 +4,17 @@ import { router } from 'expo-router';
 import { colors } from '../theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 
-// Mock data for demonstration
-const missingCards = Array.from({ length: 50 }, (_, i) => ({
-  id: i + 1,
-  clientName: `Client ${i + 1}`,
-  cardNumber: `****${Math.floor(Math.random() * 9000) + 1000}`,
-  reportedDate: `${Math.floor(Math.random() * 24)} hours ago`,
-  status: ['Reported', 'Processing', 'Replaced'][Math.floor(Math.random() * 3)],
-}));
+// Mock data for Said Talibi's missing card
+const missingCards = [
+  {
+    id: 1,
+    clientName: 'Said Talibi',
+    cardNumber: '6011********8901',
+    reportedDate: '2 hours ago',
+    status: 'Reported',
+    cardType: 'VISA'
+  }
+];
 
 export default function MissingCardsScreen() {
   return (
@@ -44,18 +47,17 @@ export default function MissingCardsScreen() {
               </View>
 
               <View style={styles.cardDetails}>
-                <Text style={styles.clientName}>{card.clientName}</Text>
+                <View style={styles.clientInfo}>
+                  <Text style={styles.clientName}>{card.clientName}</Text>
+                  <Text style={styles.cardType}>{card.cardType}</Text>
+                </View>
                 <View style={[
                   styles.statusBadge,
-                  { backgroundColor: card.status === 'Replaced' ? colors.status.success + '20' : 
-                    card.status === 'Processing' ? colors.status.warning + '20' : 
-                    colors.status.error + '20' }
+                  { backgroundColor: colors.status.error + '20' }
                 ]}>
                   <Text style={[
                     styles.statusText,
-                    { color: card.status === 'Replaced' ? colors.status.success : 
-                      card.status === 'Processing' ? colors.status.warning : 
-                      colors.status.error }
+                    { color: colors.status.error }
                   ]}>
                     {card.status}
                   </Text>
@@ -162,10 +164,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 15,
   },
+  clientInfo: {
+    flex: 1,
+  },
   clientName: {
     fontSize: 16,
     fontWeight: 'bold',
     color: colors.text.primary,
+    marginBottom: 4,
+  },
+  cardType: {
+    fontSize: 14,
+    color: colors.text.secondary,
   },
   statusBadge: {
     paddingHorizontal: 8,

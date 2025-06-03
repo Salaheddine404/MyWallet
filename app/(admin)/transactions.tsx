@@ -1,20 +1,177 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { router } from 'expo-router';
 import { colors } from '../theme/colors';
 import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 
 // Mock data for demonstration
-const transactions = Array.from({ length: 50 }, (_, i) => ({
-  id: i + 1,
-  sender: `Client ${i + 1}`,
-  receiver: `Client ${Math.floor(Math.random() * 50) + 1}`,
-  amount: (Math.random() * 10000).toFixed(2),
-  date: `${Math.floor(Math.random() * 24)} hours ago`,
-  status: ['Completed', 'Pending', 'Failed'][Math.floor(Math.random() * 3)],
-}));
+const transactions = [
+  {
+    id: 1,
+    clientId: 1,
+    clientName: 'Said Talibi',
+    amount: 1500.00,
+    type: 'DEPOSIT',
+    date: '2024-03-20 14:30',
+    status: 'COMPLETED',
+    description: 'Salary deposit'
+  },
+  {
+    id: 2,
+    clientId: 2,
+    clientName: 'Yasmine El Mansouri',
+    amount: -750.50,
+    type: 'WITHDRAWAL',
+    date: '2024-03-20 13:15',
+    status: 'COMPLETED',
+    description: 'ATM withdrawal'
+  },
+  {
+    id: 3,
+    clientId: 3,
+    clientName: 'Ahmed Al Fassi',
+    amount: 2500.00,
+    type: 'TRANSFER',
+    date: '2024-03-20 12:45',
+    status: 'PENDING',
+    description: 'Transfer to family member'
+  },
+  {
+    id: 4,
+    clientId: 4,
+    clientName: 'Salma Ben Youssef',
+    amount: -120.75,
+    type: 'PURCHASE',
+    date: '2024-03-20 11:20',
+    status: 'COMPLETED',
+    description: 'Grocery store purchase'
+  },
+  {
+    id: 5,
+    clientId: 5,
+    clientName: 'Nour El Houda Charif',
+    amount: 500.00,
+    type: 'DEPOSIT',
+    date: '2024-03-20 10:15',
+    status: 'COMPLETED',
+    description: 'Cash deposit'
+  },
+  {
+    id: 6,
+    clientId: 6,
+    clientName: 'Anas El Idrissi',
+    amount: -2000.00,
+    type: 'TRANSFER',
+    date: '2024-03-20 09:30',
+    status: 'FAILED',
+    description: 'International transfer'
+  },
+  {
+    id: 7,
+    clientId: 7,
+    clientName: 'Lina Al Amrani',
+    amount: 300.00,
+    type: 'DEPOSIT',
+    date: '2024-03-19 16:45',
+    status: 'COMPLETED',
+    description: 'Mobile deposit'
+  },
+  {
+    id: 8,
+    clientId: 8,
+    clientName: 'Rania Benali',
+    amount: -85.25,
+    type: 'PURCHASE',
+    date: '2024-03-19 15:20',
+    status: 'COMPLETED',
+    description: 'Restaurant payment'
+  },
+  {
+    id: 9,
+    clientId: 9,
+    clientName: 'Othman El Hariri',
+    amount: 1000.00,
+    type: 'TRANSFER',
+    date: '2024-03-19 14:10',
+    status: 'PENDING',
+    description: 'Bill payment'
+  },
+  {
+    id: 10,
+    clientId: 10,
+    clientName: 'Iman Al Rachidi',
+    amount: -150.00,
+    type: 'WITHDRAWAL',
+    date: '2024-03-19 13:05',
+    status: 'COMPLETED',
+    description: 'ATM withdrawal'
+  }
+];
 
 export default function TransactionsScreen() {
+  const [transactionList, setTransactionList] = useState(transactions);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterStatus, setFilterStatus] = useState<string | null>(null);
+
+  const handleTransactionAction = async (transactionId: number, action: 'approve' | 'reject') => {
+    try {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      
+      setTransactionList(prevList => 
+        prevList.map(transaction => 
+          transaction.id === transactionId 
+            ? { 
+                ...transaction, 
+                status: action === 'approve' ? 'COMPLETED' : 'FAILED'
+              } 
+            : transaction
+        )
+      );
+
+      Alert.alert(
+        'Success',
+        `Transaction ${action === 'approve' ? 'approved' : 'rejected'} successfully`
+      );
+    } catch (error) {
+      Alert.alert('Error', 'Failed to process transaction');
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'COMPLETED':
+        return colors.status.success;
+      case 'PENDING':
+        return colors.status.warning;
+      case 'FAILED':
+        return colors.status.error;
+      default:
+        return colors.text.secondary;
+    }
+  };
+
+  const getTransactionIcon = (type: string) => {
+    switch (type) {
+      case 'DEPOSIT':
+        return 'arrow-down-circle';
+      case 'WITHDRAWAL':
+        return 'arrow-up-circle';
+      case 'TRANSFER':
+        return 'swap-horizontal';
+      case 'PURCHASE':
+        return 'cart';
+      default:
+        return 'card';
+    }
+  };
+
+  const filteredTransactions = transactionList.filter(transaction =>
+    (transaction.clientName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    transaction.description.toLowerCase().includes(searchQuery.toLowerCase())) &&
+    (!filterStatus || transaction.status === filterStatus)
+  );
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -33,43 +190,84 @@ export default function TransactionsScreen() {
           <Text style={styles.searchPlaceholder}>Search transactions...</Text>
         </View>
 
-        <View style={styles.tableHeader}>
-          <Text style={[styles.headerCell, { flex: 2 }]}>Sender</Text>
-          <Text style={[styles.headerCell, { flex: 2 }]}>Receiver</Text>
-          <Text style={[styles.headerCell, { flex: 1 }]}>Amount</Text>
-          <Text style={[styles.headerCell, { flex: 1 }]}>Status</Text>
+        <View style={styles.filterContainer}>
+          <TouchableOpacity 
+            style={[styles.filterButton, !filterStatus && styles.filterButtonActive]}
+            onPress={() => setFilterStatus(null)}
+          >
+            <Text style={[styles.filterButtonText, !filterStatus && styles.filterButtonTextActive]}>All</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.filterButton, filterStatus === 'COMPLETED' && styles.filterButtonActive]}
+            onPress={() => setFilterStatus('COMPLETED')}
+          >
+            <Text style={[styles.filterButtonText, filterStatus === 'COMPLETED' && styles.filterButtonTextActive]}>Completed</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.filterButton, filterStatus === 'PENDING' && styles.filterButtonActive]}
+            onPress={() => setFilterStatus('PENDING')}
+          >
+            <Text style={[styles.filterButtonText, filterStatus === 'PENDING' && styles.filterButtonTextActive]}>Pending</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.filterButton, filterStatus === 'FAILED' && styles.filterButtonActive]}
+            onPress={() => setFilterStatus('FAILED')}
+          >
+            <Text style={[styles.filterButtonText, filterStatus === 'FAILED' && styles.filterButtonTextActive]}>Failed</Text>
+          </TouchableOpacity>
         </View>
 
-        <ScrollView style={styles.tableContent}>
-          {transactions.map((transaction) => (
-            <TouchableOpacity 
-              key={transaction.id} 
-              style={styles.tableRow}
-              onPress={() => {/* Handle transaction details */}}
-            >
-              <Text style={[styles.cell, { flex: 2 }]}>{transaction.sender}</Text>
-              <Text style={[styles.cell, { flex: 2 }]}>{transaction.receiver}</Text>
-              <Text style={[styles.cell, { flex: 1, color: colors.primary }]}>
-                MAD {transaction.amount}
-              </Text>
-              <View style={[styles.cell, { flex: 1 }]}>
-                <View style={[
-                  styles.statusBadge,
-                  { backgroundColor: transaction.status === 'Completed' ? colors.status.success + '20' : 
-                    transaction.status === 'Pending' ? colors.status.warning + '20' : 
-                    colors.status.error + '20' }
-                ]}>
-                  <Text style={[
-                    styles.statusText,
-                    { color: transaction.status === 'Completed' ? colors.status.success : 
-                      transaction.status === 'Pending' ? colors.status.warning : 
-                      colors.status.error }
-                  ]}>
-                    {transaction.status}
-                  </Text>
+        <ScrollView style={styles.transactionList}>
+          {filteredTransactions.map((transaction) => (
+            <View key={transaction.id} style={styles.transactionCard}>
+              <View style={styles.transactionHeader}>
+                <View style={styles.transactionType}>
+                  <Ionicons 
+                    name={getTransactionIcon(transaction.type)} 
+                    size={24} 
+                    color={colors.primary} 
+                  />
+                  <Text style={styles.transactionTypeText}>{transaction.type}</Text>
                 </View>
+                <Text style={[styles.transactionStatus, { color: getStatusColor(transaction.status) }]}>
+                  {transaction.status}
+                </Text>
               </View>
-            </TouchableOpacity>
+              
+              <View style={styles.transactionInfo}>
+                <Text style={styles.clientName}>{transaction.clientName}</Text>
+                <Text style={styles.transactionDescription}>{transaction.description}</Text>
+                <Text style={styles.transactionDate}>{transaction.date}</Text>
+              </View>
+
+              <View style={styles.transactionAmount}>
+                <Text style={[
+                  styles.amountText,
+                  { color: transaction.amount > 0 ? colors.status.success : colors.status.error }
+                ]}>
+                  {transaction.amount > 0 ? '+' : ''}{transaction.amount.toFixed(2)} MAD
+                </Text>
+              </View>
+
+              {transaction.status === 'PENDING' && (
+                <View style={styles.transactionActions}>
+                  <TouchableOpacity 
+                    style={[styles.actionButton, styles.approveButton]}
+                    onPress={() => handleTransactionAction(transaction.id, 'approve')}
+                  >
+                    <Ionicons name="checkmark-circle-outline" size={20} color={colors.status.success} />
+                    <Text style={[styles.actionButtonText, styles.approveText]}>Approve</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                    style={[styles.actionButton, styles.rejectButton]}
+                    onPress={() => handleTransactionAction(transaction.id, 'reject')}
+                  >
+                    <Ionicons name="close-circle-outline" size={20} color={colors.status.error} />
+                    <Text style={[styles.actionButtonText, styles.rejectText]}>Reject</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
           ))}
         </ScrollView>
       </View>
@@ -119,52 +317,114 @@ const styles = StyleSheet.create({
     color: colors.gray[400],
     fontSize: 16,
   },
-  tableHeader: {
+  filterContainer: {
     flexDirection: 'row',
-    backgroundColor: colors.white,
-    padding: 15,
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
-    shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    marginBottom: 20,
+    gap: 10,
   },
-  headerCell: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: colors.text.primary,
+  filterButton: {
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: colors.gray[100],
   },
-  tableContent: {
+  filterButtonActive: {
+    backgroundColor: colors.primary,
+  },
+  filterButtonText: {
+    fontSize: 12,
+    color: colors.text.secondary,
+    fontWeight: '600',
+  },
+  filterButtonTextActive: {
+    color: colors.white,
+  },
+  transactionList: {
     flex: 1,
+  },
+  transactionCard: {
     backgroundColor: colors.white,
-    borderBottomLeftRadius: 12,
-    borderBottomRightRadius: 12,
-    shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  tableRow: {
-    flexDirection: 'row',
+    borderRadius: 12,
     padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.gray[200],
+    marginBottom: 10,
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
-  cell: {
+  transactionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  transactionType: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  transactionTypeText: {
+    marginLeft: 8,
     fontSize: 14,
+    fontWeight: '600',
     color: colors.text.primary,
   },
-  statusBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-    alignSelf: 'flex-start',
-  },
-  statusText: {
+  transactionStatus: {
     fontSize: 12,
     fontWeight: '600',
+  },
+  transactionInfo: {
+    marginBottom: 10,
+  },
+  clientName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: colors.text.primary,
+    marginBottom: 4,
+  },
+  transactionDescription: {
+    fontSize: 14,
+    color: colors.text.secondary,
+    marginBottom: 4,
+  },
+  transactionDate: {
+    fontSize: 12,
+    color: colors.text.secondary,
+  },
+  transactionAmount: {
+    marginBottom: 10,
+  },
+  amountText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  transactionActions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 10,
+  },
+  actionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  actionButtonText: {
+    marginLeft: 4,
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  approveButton: {
+    backgroundColor: colors.status.success + '10',
+  },
+  rejectButton: {
+    backgroundColor: colors.status.error + '10',
+  },
+  approveText: {
+    color: colors.status.success,
+  },
+  rejectText: {
+    color: colors.status.error,
   },
 }); 
