@@ -17,18 +17,6 @@ export default function AdminLayout() {
         }}
       />
       <Tabs.Screen
-        name="clients"
-        options={{
-          title: 'Add User',
-        }}
-      />
-      <Tabs.Screen
-        name="card-activation"
-        options={{
-          title: 'Manage Cards',
-        }}
-      />
-      <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',

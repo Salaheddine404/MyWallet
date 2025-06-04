@@ -6,9 +6,9 @@ import * as Haptics from 'expo-haptics';
 import { colors } from '../theme/colors';
 
 const { width } = Dimensions.get('window');
-const TAB_WIDTH = width / 4;
+const TAB_WIDTH = width / 3;
 
-type IconName = 'home' | 'person-add' | 'card' | 'person' | 'settings';
+type IconName = 'home' | 'person' | 'settings';
 
 type TabType = {
   name: string;
@@ -28,18 +28,6 @@ export default function AdminTabBar() {
       label: 'Dashboard',
       icon: 'home',
       path: '/(admin)/dashboard',
-    },
-    {
-      name: 'clients',
-      label: 'Add User',
-      icon: 'person-add',
-      path: '/(admin)/clients',
-    },
-    {
-      name: 'card-activation',
-      label: 'Cards',
-      icon: 'card',
-      path: '/(admin)/card-activation',
     },
     {
       name: 'profile',
@@ -69,7 +57,7 @@ export default function AdminTabBar() {
 
   const handleTabPress = (tab: TabType) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    router.push(tab.path);
+    router.push(tab.path as any);
   };
 
   const getIconName = (icon: IconName, isActive: boolean): keyof typeof Ionicons.glyphMap => {
