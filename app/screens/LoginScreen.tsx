@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ActivityIndicator, Alert, ImageBackground } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ActivityIndicator, Alert, ImageBackground, Image } from "react-native";
 import { useState } from "react";
 import { router } from "expo-router";
 import { colors } from "../theme/colors";
@@ -52,6 +52,15 @@ export default function LoginScreen() {
         style={styles.container}
       >
         <View style={styles.content}>
+          {/* Logo Section */}
+          <View style={styles.logoContainer}>
+            <Image
+              source={require('../../assets/images/lib.webp')}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+          </View>
+
           {/* Form Section */}
           <View style={styles.formContainer}>
             <View style={styles.formContent}>
@@ -130,6 +139,33 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: 'center',
+  },
+  logoContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 30,
+    paddingTop: 20,
+    width: 350,
+    height: 350,
+    alignSelf: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 175,
+    padding: 20,
+    shadowColor: colors.black,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  logo: {
+    width: 300,
+    height: 300,
+    borderRadius: 150,
   },
   formContainer: {
     backgroundColor: 'rgba(255, 255, 255, 0.65)',
