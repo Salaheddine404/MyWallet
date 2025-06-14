@@ -282,7 +282,7 @@ export default function HomeScreen() {
             <TouchableOpacity onPress={toggleDrawer} style={styles.menuButton}>
               <Ionicons name="menu" size={24} color={colors.white} />
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>My Wallet</Text>
+            <Text style={styles.headerTitle}>Libyan Islamic Bank</Text>
           </View>
           
           <ScrollView style={styles.container}>
