@@ -118,7 +118,7 @@ export default function LoginScreen() {
           </View>
 
           <Text style={styles.footerText}>
-            © 2025 MyWallet Bank. All rights reserved.
+            © 2025 Libyan Islamic  Bank. All rights reserved.
           </Text>
         </View>
       </KeyboardAvoidingView>

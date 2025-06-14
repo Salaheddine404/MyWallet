@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -13,49 +13,72 @@ export const CardBack: React.FC<CardBackProps> = ({
   cvv,
   isActive = true,
 }) => {
-  return (
-    <View style={[styles.card, { backgroundColor: isActive ? '#90EE90' : '#00A36C' }]}>
-      {/* Magnetic stripe */}
-      <View style={styles.magneticStripe} />
-      
-      {/* Signature strip */}
-      <View style={styles.signatureStrip}>
-        <View style={styles.signatureArea}>
-          <Text style={styles.signatureText}>
-            AUTHORIZED SIGNATURE
-          </Text>
-        </View>
-        <View style={styles.cvvContainer}>
-          <Text style={styles.cvvText}>{cvv || 'XXX'}</Text>
-        </View>
-      </View>
-      
-      {/* Card issuer info */}
-      <View style={styles.footer}>
-        <View style={styles.serviceInfo}>
-          <Ionicons name="card" size={16} color={colors.white} />
-          <Text style={styles.serviceText}>
-            24/7 Customer Service: 1-800-BOLT-BANK
-          </Text>
-        </View>
-        <Text style={styles.termsText}>
-          This card is property of Bolt Bank and must be returned upon request.
-          Use of this card is subject to the cardholder agreement.
-        </Text>
-      </View>
+  const textColor = isActive ? colors.white : colors.black;
 
-      {/* Decorative circles */}
-      <View style={styles.decorativeCircle1} />
-      <View style={styles.decorativeCircle2} />
+  return (
+    <View style={styles.container}>
+      <ImageBackground
+        source={isActive ? require('../../assets/images/activecard.jpg') : require('../../assets/images/inactive.jpg')}
+        style={styles.card}
+        resizeMode="stretch"
+      >
+        <View style={styles.contentContainer}>
+          {/* Magnetic stripe */}
+          <View style={styles.magneticStripe} />
+          
+          {/* Signature strip */}
+          <View style={styles.signatureStrip}>
+            <View style={styles.signatureArea}>
+              <Text style={[styles.signatureText, { color: textColor }]}>
+                AUTHORIZED SIGNATURE
+              </Text>
+            </View>
+            <View style={styles.cvvContainer}>
+              <Text style={styles.cvvText}>{cvv || 'XXX'}</Text>
+            </View>
+          </View>
+          
+          {/* Card issuer info */}
+          <View style={styles.footer}>
+            <View style={styles.serviceInfo}>
+              <Ionicons name="card" size={16} color={textColor} />
+              <Text style={[styles.serviceText, { color: textColor }]}>
+                24/7 Customer Service: 1-800-BOLT-BANK
+              </Text>
+            </View>
+            <Text style={[styles.termsText, { color: textColor }]}>
+              This card is property of Bolt Bank and must be returned upon request.
+              Use of this card is subject to the cardholder agreement.
+            </Text>
+          </View>
+
+          {/* Decorative circles */}
+          <View style={styles.decorativeCircle1} />
+          <View style={styles.decorativeCircle2} />
+        </View>
+      </ImageBackground>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    aspectRatio: 1.6,
+    borderRadius: 20,
+    overflow: 'hidden',
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 12,
+  },
   card: {
     width: '100%',
     height: '100%',
-    borderRadius: 15,
+  },
+  contentContainer: {
+    flex: 1,
     padding: 20,
     justifyContent: 'space-between',
   },
@@ -64,6 +87,7 @@ const styles = StyleSheet.create({
     height: 48,
     backgroundColor: colors.black,
     marginTop: 24,
+    opacity: 0.8,
   },
   signatureStrip: {
     marginTop: 24,
@@ -115,7 +139,6 @@ const styles = StyleSheet.create({
   },
   serviceText: {
     marginLeft: 10,
-    color: colors.white,
     opacity: 0.9,
     fontSize: 12,
     fontWeight: '500',
@@ -125,7 +148,6 @@ const styles = StyleSheet.create({
     textShadowRadius: 2,
   },
   termsText: {
-    color: colors.white,
     opacity: 0.8,
     fontSize: 10,
     lineHeight: 12,

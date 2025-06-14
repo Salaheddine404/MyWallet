@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, Dimensions } from 'react-native';
 import { ChipIcon } from './ChipIcon';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
@@ -23,43 +23,53 @@ export const CardFront: React.FC<CardFrontProps> = ({
     return `•••• •••• •••• ${visiblePart}`;
   };
 
-  return (
-    <View style={[styles.card, { backgroundColor: isActive ? '#90EE90' : '#00A36C' }]}>
-      {/* Shine effect */}
-      <View style={styles.shineEffect} />
-      
-      {/* Bank logo and wifi icon */}
-      <View style={styles.header}>
-        <Text style={styles.bankName}>MyBank</Text>
-        <Ionicons name="wifi" size={24} color={colors.white} style={styles.wifiIcon} />
-      </View>
-      
-      {/* Chip and card type */}
-      <View style={styles.chipContainer}>
-        <ChipIcon size={40} />
-        <Text style={styles.cardType}>Platinum</Text>
-      </View>
-      
-      {/* Card number */}
-      <Text style={styles.cardNumber}>
-        {formatCardNumber(cardNumber)}
-      </Text>
-      
-      {/* Card holder and expiry */}
-      <View style={styles.footer}>
-        <View style={styles.cardHolder}>
-          <Text style={styles.label}>Card Holder</Text>
-          <Text style={styles.value}>{cardHolder || 'YOUR NAME'}</Text>
-        </View>
-        <View style={styles.expiry}>
-          <Text style={styles.label}>Expires</Text>
-          <Text style={styles.value}>{expiryDate || 'MM/YY'}</Text>
-        </View>
-      </View>
+  const textColor = isActive ? colors.white : colors.black;
 
-      {/* Decorative circles */}
-      <View style={styles.decorativeCircle1} />
-      <View style={styles.decorativeCircle2} />
+  return (
+    <View style={styles.container}>
+      <ImageBackground
+        source={isActive ? require('../../assets/images/activecard.jpg') : require('../../assets/images/inactive.jpg')}
+        style={styles.card}
+        resizeMode="stretch"
+      >
+        <View style={styles.contentContainer}>
+          {/* Shine effect */}
+          <View style={styles.shineEffect} />
+          
+          {/* Bank logo and wifi icon */}
+          <View style={styles.header}>
+            <Text style={[styles.bankName, { color: textColor }]}>Libyan IslamicBank</Text>
+            <Ionicons name="wifi" size={24} color={textColor} style={styles.wifiIcon} />
+          </View>
+          
+          {/* Chip and card type */}
+          <View style={styles.chipContainer}>
+            <ChipIcon size={40} />
+            <Text style={[styles.cardType, { color: textColor }]}>Platinum</Text>
+          </View>
+          
+          {/* Card number */}
+          <Text style={[styles.cardNumber, { color: textColor }]}>
+            {formatCardNumber(cardNumber)}
+          </Text>
+          
+          {/* Card holder and expiry */}
+          <View style={styles.footer}>
+            <View style={styles.cardHolder}>
+              <Text style={[styles.label, { color: textColor }]}>Card Holder</Text>
+              <Text style={[styles.value, { color: textColor }]}>{cardHolder || 'YOUR NAME'}</Text>
+            </View>
+            <View style={styles.expiry}>
+              <Text style={[styles.label, { color: textColor }]}>Expires</Text>
+              <Text style={[styles.value, { color: textColor }]}>{expiryDate || 'MM/YY'}</Text>
+            </View>
+          </View>
+
+          {/* Decorative circles */}
+          <View style={styles.decorativeCircle1} />
+          <View style={styles.decorativeCircle2} />
+        </View>
+      </ImageBackground>
     </View>
   );
 };
@@ -69,13 +79,21 @@ const styles = StyleSheet.create({
     width: '100%',
     aspectRatio: 1.6,
     borderRadius: 20,
-    padding: 24,
     overflow: 'hidden',
     shadowColor: colors.black,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.3,
     shadowRadius: 12,
     elevation: 12,
+  },
+  card: {
+    width: '100%',
+    height: '100%',
+  },
+  contentContainer: {
+    flex: 1,
+    padding: 20,
+    justifyContent: 'space-between',
   },
   shineEffect: {
     position: 'absolute',
@@ -96,7 +114,6 @@ const styles = StyleSheet.create({
   bankName: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: colors.white,
     letterSpacing: 1.5,
     textShadowColor: 'rgba(0, 0, 0, 0.2)',
     textShadowOffset: { width: 1, height: 1 },
@@ -112,7 +129,6 @@ const styles = StyleSheet.create({
   },
   cardType: {
     marginLeft: 'auto',
-    color: colors.white,
     opacity: 0.9,
     fontSize: 14,
     letterSpacing: 2.5,
@@ -124,7 +140,6 @@ const styles = StyleSheet.create({
   },
   cardNumber: {
     fontSize: 24,
-    color: colors.white,
     letterSpacing: 3,
     marginBottom: 32,
     fontFamily: 'monospace',
@@ -147,7 +162,6 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 12,
-    color: colors.white,
     opacity: 0.9,
     marginBottom: 6,
     letterSpacing: 1.5,
@@ -159,7 +173,6 @@ const styles = StyleSheet.create({
   },
   value: {
     fontSize: 16,
-    color: colors.white,
     fontWeight: '600',
     textTransform: 'uppercase',
     letterSpacing: 1,
@@ -184,12 +197,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
     bottom: -75,
     left: -75,
-  },
-  card: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 15,
-    padding: 20,
-    justifyContent: 'space-between',
   },
 }); 

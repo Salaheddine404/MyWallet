@@ -24,7 +24,7 @@ export default function AdminProfile() {
               <Ionicons name="person-circle" size={80} color={colors.primary} />
             </View>
             <View style={styles.profileInfo}>
-              <Text style={styles.profileName}>Hicham EL-QASIMI</Text>
+              <Text style={styles.profileName}>Hicham EL-KASMI</Text>
               <Text style={styles.profileRole}>Administrator</Text>
             </View>
           </View>
@@ -36,14 +36,14 @@ export default function AdminProfile() {
                 <Ionicons name="mail-outline" size={24} color={colors.primary} />
                 <View style={styles.detailTextContainer}>
                   <Text style={styles.detailLabel}>Email</Text>
-                  <Text style={styles.detailValue}>admin@mywallet.com</Text>
+                  <Text style={styles.detailValue}>helkasmi@s2M.ma</Text>
                 </View>
               </View>
               <View style={styles.detailItem}>
                 <Ionicons name="call-outline" size={24} color={colors.primary} />
                 <View style={styles.detailTextContainer}>
                   <Text style={styles.detailLabel}>Phone</Text>
-                  <Text style={styles.detailValue}>+212 6XX-XXXXXX</Text>
+                  <Text style={styles.detailValue}>+212 662099060</Text>
                 </View>
               </View>
             </View>

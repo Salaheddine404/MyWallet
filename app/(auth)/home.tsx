@@ -245,7 +245,7 @@ export default function HomeScreen() {
   if (isLoading) {
     return (
       <ImageBackground
-        source={require('../../assets/images/homescreenback.webp')}
+        source={require('../../assets/images/loginback.webp')}
         style={styles.backgroundImage}
         resizeMode="cover"
       >
@@ -274,7 +274,7 @@ export default function HomeScreen() {
         ]}
       >
         <ImageBackground
-          source={require('../../assets/images/homescreenback.webp')}
+          source={require('../../assets/images/loginback.webp')}
           style={styles.backgroundImage}
           resizeMode="cover"
         >
@@ -556,10 +556,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   activeButton: {
-    backgroundColor: '#90EE90',
+    backgroundColor: '#104343',
   },
   inactiveButton: {
-    backgroundColor: '#00A36C',
+    backgroundColor: '#728787',
   },
   controlButtonText: {
     color: colors.white,
