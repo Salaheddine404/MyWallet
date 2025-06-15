@@ -96,7 +96,7 @@ export default function ProfileScreen() {
             </View>
             <View style={styles.infoContainer}>
               <Text style={styles.label}>National ID</Text>
-              <Text style={styles.value}>Z24561</Text>
+              <Text style={styles.value}>199104215748</Text>
             </View>
           </View>
 

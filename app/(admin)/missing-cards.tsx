@@ -10,7 +10,7 @@ const missingCards = [
     id: 1,
     clientName: 'Said Talibi',
     cardNumber: '6011********8901',
-    reportedDate: '2 hours ago',
+   
     status: 'Reported',
     cardType: 'VISA'
   }

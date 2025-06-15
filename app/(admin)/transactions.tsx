@@ -11,11 +11,11 @@ const transactions = [
     id: 1,
     clientId: 1,
     clientName: 'Said Talibi',
-    amount: 1500.00,
-    type: 'DEPOSIT',
-    date: '2024-03-20 14:30',
+    amount:  -1500.00,
+    type: 'TRANSFER',    
+    date: '2025-06-15 14:30',
     status: 'COMPLETED',
-    description: 'Salary deposit'
+    description: 'debit'
   },
   {
     id: 2,
@@ -23,7 +23,7 @@ const transactions = [
     clientName: 'Yasmine El Mansouri',
     amount: -750.50,
     type: 'WITHDRAWAL',
-    date: '2024-03-20 13:15',
+    date: '2025-03-20 13:15',
     status: 'COMPLETED',
     description: 'ATM withdrawal'
   },
@@ -33,7 +33,7 @@ const transactions = [
     clientName: 'Ahmed Al Fassi',
     amount: 2500.00,
     type: 'TRANSFER',
-    date: '2024-03-20 12:45',
+    date: '2025-03-20 12:45',
     status: 'PENDING',
     description: 'Transfer to family member'
   },
@@ -43,7 +43,7 @@ const transactions = [
     clientName: 'Salma Ben Youssef',
     amount: -120.75,
     type: 'PURCHASE',
-    date: '2024-03-20 11:20',
+    date: '2025-03-20 11:20',
     status: 'COMPLETED',
     description: 'Grocery store purchase'
   },
@@ -53,7 +53,7 @@ const transactions = [
     clientName: 'Nour El Houda Charif',
     amount: 500.00,
     type: 'DEPOSIT',
-    date: '2024-03-20 10:15',
+    date: '2025-03-20 10:15',
     status: 'COMPLETED',
     description: 'Cash deposit'
   },
@@ -63,7 +63,7 @@ const transactions = [
     clientName: 'Anas El Idrissi',
     amount: -2000.00,
     type: 'TRANSFER',
-    date: '2024-03-20 09:30',
+    date: '2025-03-20 09:30',
     status: 'FAILED',
     description: 'International transfer'
   },
@@ -73,7 +73,7 @@ const transactions = [
     clientName: 'Lina Al Amrani',
     amount: 300.00,
     type: 'DEPOSIT',
-    date: '2024-03-19 16:45',
+    date: '2025-03-19 16:45',
     status: 'COMPLETED',
     description: 'Mobile deposit'
   },
@@ -83,7 +83,7 @@ const transactions = [
     clientName: 'Rania Benali',
     amount: -85.25,
     type: 'PURCHASE',
-    date: '2024-03-19 15:20',
+    date: '2025-03-19 15:20',
     status: 'COMPLETED',
     description: 'Restaurant payment'
   },
@@ -93,7 +93,7 @@ const transactions = [
     clientName: 'Othman El Hariri',
     amount: 1000.00,
     type: 'TRANSFER',
-    date: '2024-03-19 14:10',
+    date: '2025-03-19 14:10',
     status: 'PENDING',
     description: 'Bill payment'
   },
@@ -103,7 +103,7 @@ const transactions = [
     clientName: 'Iman Al Rachidi',
     amount: -150.00,
     type: 'WITHDRAWAL',
-    date: '2024-03-19 13:05',
+    date: '2025-03-19 13:05',
     status: 'COMPLETED',
     description: 'ATM withdrawal'
   }

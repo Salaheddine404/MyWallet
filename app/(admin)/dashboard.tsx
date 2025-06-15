@@ -47,9 +47,9 @@ export default function AdminDashboard() {
 
   const stats: Stat[] = [
     { title: 'Total Users', value: '107,358', icon: 'people-outline', color: '#4CAF50' },
-    { title: 'Total Cards', value: '856', icon: 'card-outline', color: '#2196F3' },
+    { title: 'Total Cards', value: '202,674', icon: 'card-outline', color: '#2196F3' },
     { title: 'Total Transactions', value: '55,567M', icon: 'swap-horizontal-outline', color: '#FF9800' },
-    { title: 'Revenue', value: 'MAD 317.2M', icon: 'trending-up-outline', color: '#9C27B0' },
+    { title: 'turnover', value: 'LYD 317.2M', icon: 'trending-up-outline', color: '#9C27B0' },
   ];
 
   const recentActivities: Activity[] = [
