@@ -114,7 +114,7 @@ export default function MakeTransactionScreen() {
           {/* Current Balance */}
           <View style={styles.balanceContainer}>
             <Text style={styles.balanceLabel}>Current Balance</Text>
-            <Text style={styles.balanceAmount}>{balance.toLocaleString()} MAD</Text>
+            <Text style={styles.balanceAmount}>{balance.toLocaleString()} LYD</Text>
           </View>
 
           {/* Beneficiary Name Input */}
@@ -162,7 +162,7 @@ export default function MakeTransactionScreen() {
                 value={amount}
                 onChangeText={(text) => setAmount(text.replace(/[^0-9.]/g, ''))}
               />
-              <Text style={styles.currency}>MAD</Text>
+              <Text style={styles.currency}>LYD</Text>
             </View>
           </View>
 

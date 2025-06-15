@@ -61,7 +61,7 @@ export default function TransactionsScreen() {
 
           <View style={styles.balanceBox}>
             <Text style={styles.balanceLabel}>Current Balance</Text>
-            <Text style={styles.balanceAmount}>{balance.toLocaleString()} MAD</Text>
+            <Text style={styles.balanceAmount}>{balance.toLocaleString()} LYD</Text>
           </View>
 
           <View style={styles.filterContainer}>
@@ -116,7 +116,7 @@ export default function TransactionsScreen() {
                       styles.transactionAmount,
                       transaction.type === 'credit' ? styles.creditAmount : styles.debitAmount
                     ]}>
-                      {transaction.type === 'credit' ? '+' : ''}{transaction.amount} MAD
+                      {transaction.type === 'credit' ? '+' : ''}{transaction.amount} LYD
                     </Text>
                   </View>
                   <View style={styles.transactionDetails}>

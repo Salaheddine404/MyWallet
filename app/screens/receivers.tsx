@@ -53,7 +53,7 @@ export default function ReceiversScreen() {
                 <Text style={styles.cellText}>{transaction.receiver}</Text>
               </View>
               <View style={[styles.cell, { flex: 1 }]}>
-                <Text style={styles.cellText}>{transaction.amount} MAD</Text>
+                <Text style={styles.cellText}>{transaction.amount} LYD</Text>
               </View>
             </View>
           ))}

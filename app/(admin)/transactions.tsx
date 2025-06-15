@@ -245,7 +245,7 @@ export default function TransactionsScreen() {
                   styles.amountText,
                   { color: transaction.amount > 0 ? colors.status.success : colors.status.error }
                 ]}>
-                  {transaction.amount > 0 ? '+' : ''}{transaction.amount.toFixed(2)} MAD
+                  {transaction.amount > 0 ? '+' : ''}{transaction.amount.toFixed(2)} LYD
                 </Text>
               </View>
 

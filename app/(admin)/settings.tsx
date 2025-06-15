@@ -132,7 +132,7 @@ export default function SettingsScreen() {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/homescreenback.webp')}
+      source={require('../../assets/images/back3.webp')}
       style={styles.backgroundImage}
       resizeMode="cover"
     >

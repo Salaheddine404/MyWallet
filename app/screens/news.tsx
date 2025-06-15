@@ -21,35 +21,35 @@ export default function NewsScreen() {
   const newsItems = [
     {
       id: 1,
-      title: 'Bank Al-Maghrib Maintains Key Rate at 3%',
+      title: 'Central Bank of Libya Maintains Interest Rate at 3.5%',
       category: 'Monetary Policy',
       date: '2 hours ago',
       image: require('../../assets/images/bankalamaghrib.webp'),
-      summary: 'The central bank keeps its benchmark interest rate unchanged, citing stable inflation expectations.'
+      summary: 'The Central Bank of Libya keeps its benchmark interest rate unchanged, supporting economic stability.'
     },
     {
       id: 2,
-      title: 'Moroccan Dirham Strengthens Against Major Currencies',
+      title: 'Libyan Dinar Shows Stability in Regional Markets',
       category: 'Currency Markets',
       date: '4 hours ago',
       image: require('../../assets/images/currencyMarket.webp'),
-      summary: 'MAD shows resilience in global markets, gaining against USD and EUR.'
+      summary: 'LYD maintains steady position against major currencies, reflecting positive economic indicators.'
     },
     {
       id: 3,
-      title: 'New Banking Regulations Announced',
-      category: 'Regulatory Updates',
+      title: 'Libyan Islamic Bank Introduces New Shariah-Compliant Products',
+      category: 'Banking Innovation',
       date: '6 hours ago',
       image: require('../../assets/images/gouvernomentbuilding.webp'),
-      summary: 'Financial authorities introduce new measures to enhance banking security.'
+      summary: 'New Islamic banking solutions launched to better serve customers while adhering to Shariah principles.'
     },
     {
       id: 4,
-      title: 'Digital Banking Services Expand',
+      title: 'Digital Banking Services Expand in Libya',
       category: 'Banking Innovation',
       date: '8 hours ago',
       image: require('../../assets/images/bankinginnovation.webp'),
-      summary: 'New mobile banking features launched to improve customer experience.'
+      summary: 'Libyan Islamic Bank enhances its mobile banking platform with new features for improved customer experience.'
     }
   ];
 
