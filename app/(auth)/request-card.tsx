@@ -17,14 +17,11 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { colors } from '../theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 import { requestDebitCard } from '../services/debiCard';
-import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function RequestCardScreen() {
   const router = useRouter();
   const { customerId } = useLocalSearchParams<{ customerId: string }>();
   const [isLoading, setIsLoading] = useState(false);
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date());
   const [formData, setFormData] = useState({
     initiator: {
       operation: 'ADD',
@@ -57,23 +54,43 @@ export default function RequestCardScreen() {
     }
   });
 
-  const handleDateChange = (event: any, date?: Date) => {
-    if (Platform.OS === 'android') {
-      setShowDatePicker(false);
-    }
+  const [dateInputs, setDateInputs] = useState({
+    day: '',
+    month: '',
+    year: ''
+  });
+
+  const handleDateInputChange = (field: 'day' | 'month' | 'year', value: string) => {
+    // Remove non-numeric characters
+    const numericValue = value.replace(/[^0-9]/g, '');
     
-    if (date) {
-      setSelectedDate(date);
-      const formattedDate = date.toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-      }).replace(/\//g, '/');
-      setFormData({
-        ...formData,
-        initiator: { ...formData.initiator, birthdate: formattedDate }
-      });
+    // Apply validation based on field
+    let validatedValue = numericValue;
+    if (field === 'day' && numericValue.length > 0) {
+      const num = parseInt(numericValue);
+      validatedValue = Math.min(Math.max(num, 1), 31).toString();
+    } else if (field === 'month' && numericValue.length > 0) {
+      const num = parseInt(numericValue);
+      validatedValue = Math.min(Math.max(num, 1), 12).toString();
+    } else if (field === 'year' && numericValue.length > 0) {
+      const num = parseInt(numericValue);
+      validatedValue = Math.min(Math.max(num, 1900), new Date().getFullYear()).toString();
     }
+
+    setDateInputs(prev => {
+      const newInputs = { ...prev, [field]: validatedValue };
+      
+      // Update formData when all fields are filled
+      if (newInputs.day && newInputs.month && newInputs.year) {
+        const formattedDate = `${newInputs.day.padStart(2, '0')}/${newInputs.month.padStart(2, '0')}/${newInputs.year}`;
+        setFormData({
+          ...formData,
+          initiator: { ...formData.initiator, birthdate: formattedDate }
+        });
+      }
+      
+      return newInputs;
+    });
   };
 
   const handleSubmit = async () => {
@@ -226,24 +243,44 @@ export default function RequestCardScreen() {
 
               <View style={styles.formGroup}>
                 <Text style={styles.label}>Birth Date *</Text>
-                <TouchableOpacity
-                  style={styles.inputContainer}
-                  onPress={() => setShowDatePicker(true)}
-                >
-                  <Ionicons name="calendar" size={20} color={colors.primary} style={styles.inputIcon} />
-                  <Text style={[
-                    styles.input,
-                    !formData.initiator.birthdate && styles.placeholderText
-                  ]}>
-                    {formData.initiator.birthdate || 'Select birth date'}
-                  </Text>
-                  <Ionicons 
-                    name="chevron-down" 
-                    size={20} 
-                    color={colors.primary} 
-                    style={styles.datePickerIcon} 
-                  />
-                </TouchableOpacity>
+                <View style={styles.dateInputsContainer}>
+                  <View style={styles.dateInputWrapper}>
+                    <TextInput
+                      style={styles.dateInput}
+                      placeholder="DD"
+                      placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                      keyboardType="number-pad"
+                      maxLength={2}
+                      value={dateInputs.day}
+                      onChangeText={(value) => handleDateInputChange('day', value)}
+                    />
+                    <Text style={styles.dateInputLabel}>Day</Text>
+                  </View>
+                  <View style={styles.dateInputWrapper}>
+                    <TextInput
+                      style={styles.dateInput}
+                      placeholder="MM"
+                      placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                      keyboardType="number-pad"
+                      maxLength={2}
+                      value={dateInputs.month}
+                      onChangeText={(value) => handleDateInputChange('month', value)}
+                    />
+                    <Text style={styles.dateInputLabel}>Month</Text>
+                  </View>
+                  <View style={styles.dateInputWrapper}>
+                    <TextInput
+                      style={styles.dateInput}
+                      placeholder="YYYY"
+                      placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                      keyboardType="number-pad"
+                      maxLength={4}
+                      value={dateInputs.year}
+                      onChangeText={(value) => handleDateInputChange('year', value)}
+                    />
+                    <Text style={styles.dateInputLabel}>Year</Text>
+                  </View>
+                </View>
               </View>
 
               <View style={styles.formGroup}>
@@ -281,46 +318,6 @@ export default function RequestCardScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-
-      {Platform.OS === 'ios' ? (
-        <Modal
-          visible={showDatePicker}
-          transparent={true}
-          animationType="slide"
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <DateTimePicker
-                value={selectedDate}
-                mode="date"
-                display="spinner"
-                onChange={handleDateChange}
-                maximumDate={new Date()}
-                minimumDate={new Date(1900, 0, 1)}
-                textColor={colors.primary}
-                style={styles.iosDatePicker}
-              />
-              <TouchableOpacity
-                style={styles.iosDatePickerButton}
-                onPress={() => setShowDatePicker(false)}
-              >
-                <Text style={styles.iosDatePickerButtonText}>Done</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-      ) : (
-        showDatePicker && (
-          <DateTimePicker
-            value={selectedDate}
-            mode="date"
-            display="default"
-            onChange={handleDateChange}
-            maximumDate={new Date()}
-            minimumDate={new Date(1900, 0, 1)}
-          />
-        )
-      )}
     </ImageBackground>
   );
 }
@@ -425,36 +422,30 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginRight: 10,
   },
-  datePickerIcon: {
-    padding: 12,
+  dateInputsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 10,
   },
-  placeholderText: {
-    color: 'rgba(255, 255, 255, 0.5)',
-  },
-  modalContainer: {
+  dateInputWrapper: {
     flex: 1,
-    justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    padding: 10,
   },
-  modalContent: {
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 16,
-  },
-  iosDatePicker: {
-    height: 200,
-  },
-  iosDatePickerButton: {
-    backgroundColor: colors.primary,
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 16,
-  },
-  iosDatePickerButtonText: {
-    color: '#FFFFFF',
+  dateInput: {
+    color: colors.white,
     fontSize: 16,
-    fontWeight: '600',
+    textAlign: 'center',
+    padding: 8,
+  },
+  dateInputLabel: {
+    color: colors.white,
+    fontSize: 12,
+    textAlign: 'center',
+    marginTop: 4,
+    opacity: 0.7,
   },
 }); 
