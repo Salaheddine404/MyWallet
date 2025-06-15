@@ -44,7 +44,7 @@ export default function TransactionsScreen() {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/homescreenback.webp')}
+      source={require('../../assets/images/back1.webp')}
       style={styles.backgroundImage}
     >
       <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 30 }}>

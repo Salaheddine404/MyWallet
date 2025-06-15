@@ -35,19 +35,19 @@ export const getExchangeRates = async (): Promise<ExchangeRate[]> => {
       'CAD': '🇨🇦',
       'AUD': '🇦🇺',
       'NZD': '🇳🇿',
-      'MAD': '🇲🇦'
+      'LYD': '🇱🇾'
     };
 
-    // Obtenir le taux USD/MAD
-    const madRate = data.conversion_rates.MAD;
+    // Get USD/LYD rate
+    const lydRate = data.conversion_rates.LYD;
     
-    // Convertir tous les taux en MAD
+    // Convert all rates to LYD
     const rates: ExchangeRate[] = Object.entries(data.conversion_rates)
-      .filter(([currency]) => currency !== 'MAD')
+      .filter(([currency]) => currency !== 'LYD')
       .map(([currency, rate]) => ({
         flag: currencyFlags[currency] || '🏳️',
         currency,
-        value: ((rate as number) * madRate).toFixed(2) + ' MAD'
+        value: ((rate as number) * lydRate).toFixed(2) + ' LYD'
       }));
 
     return rates;

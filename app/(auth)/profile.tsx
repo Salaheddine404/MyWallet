@@ -40,7 +40,7 @@ export default function ProfileScreen() {
   if (loading) {
     return (
       <ImageBackground
-        source={require('../../assets/images/loginback.webp')}
+        source={require('../../assets/images/back1.webp')}
         style={styles.backgroundImage}
       >
         <View style={styles.loadingContainer}>
@@ -54,7 +54,7 @@ export default function ProfileScreen() {
   if (error) {
     return (
       <ImageBackground
-        source={require('../../assets/images/loginback.webp')}
+        source={require('../../assets/images/back1.webp')}
         style={styles.backgroundImage}
       >
         <View style={styles.errorContainer}>
@@ -66,7 +66,7 @@ export default function ProfileScreen() {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/loginback.webp')}
+      source={require('../../assets/images/back1.webp')}
       style={styles.backgroundImage}
     >
       <ScrollView style={styles.container}>

@@ -46,10 +46,10 @@ export default function AdminDashboard() {
   }, []);
 
   const stats: Stat[] = [
-    { title: 'Total Users', value: '1,234', icon: 'people-outline', color: '#4CAF50' },
-    { title: 'Active Cards', value: '856', icon: 'card-outline', color: '#2196F3' },
-    { title: 'Transactions', value: '2,567', icon: 'swap-horizontal-outline', color: '#FF9800' },
-    { title: 'Revenue', value: 'MAD 1.2M', icon: 'trending-up-outline', color: '#9C27B0' },
+    { title: 'Total Users', value: '107,358', icon: 'people-outline', color: '#4CAF50' },
+    { title: 'Total Cards', value: '856', icon: 'card-outline', color: '#2196F3' },
+    { title: 'Total Transactions', value: '55,567M', icon: 'swap-horizontal-outline', color: '#FF9800' },
+    { title: 'Revenue', value: 'MAD 317.2M', icon: 'trending-up-outline', color: '#9C27B0' },
   ];
 
   const recentActivities: Activity[] = [
@@ -66,7 +66,7 @@ export default function AdminDashboard() {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/homescreenback.webp')}
+      source={require('../../assets/images/back1.webp')}
       style={styles.backgroundImage}
       resizeMode="cover"
     >

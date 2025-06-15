@@ -99,7 +99,7 @@ export default function MakeTransactionScreen() {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/drawer.webp')}
+      source={require('../../assets/images/back1.webp')}
       style={styles.backgroundImage}
     >
       <View style={styles.header}>

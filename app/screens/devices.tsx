@@ -46,7 +46,7 @@ export default function DevisesScreen() {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/drawerback.webp')}
+      source={require('../../assets/images/back3.webp')}
       style={styles.backgroundImage}
     >
       <View style={styles.header}>
@@ -93,7 +93,7 @@ export default function DevisesScreen() {
                   <Text style={styles.headerCell}>Currency</Text>
                 </View>
                 <View style={styles.valueHeaderContainer}>
-                  <Text style={styles.headerCell}>Value (MAD)</Text>
+                  <Text style={styles.headerCell}>Value (LYD)</Text>
                 </View>
               </View>
 

@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 export default function AdminDashboard() {
   const stats = [
-    { title: 'Total Users', value: '1,234', icon: 'people-outline' },
+    { title: 'Total Usezrs', value: '1,234', icon: 'people-outline' },
     { title: 'Active Cards', value: '856', icon: 'card-outline' },
     { title: 'Transactions', value: '2,567', icon: 'swap-horizontal-outline' },
     { title: 'Revenue', value: 'MAD 1.2M', icon: 'trending-up-outline' },
@@ -28,7 +28,7 @@ export default function AdminDashboard() {
         >
           <Ionicons name="log-out-outline" size={24} color={colors.white} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Admin Dashboard</Text>
+        <Text style={styles.headerTitle}>Wellcom Hicham </Text>
       </View>
 
       <ScrollView style={styles.content}>

@@ -158,7 +158,7 @@ export default function HomeScreen() {
       ]}
     >
       <ImageBackground
-        source={require('../../assets/images/drawerback.webp')}
+        source={require('../../assets/images/back1.webp')}
         style={StyleSheet.absoluteFill}
         resizeMode="cover"
       >
@@ -191,7 +191,7 @@ export default function HomeScreen() {
               onPress={() => handleDrawerNavigation('/screens/devices')}
             >
               <Ionicons name="phone-portrait-outline" size={28} color={colors.white} />
-              <Text style={styles.drawerItemText}>Devises</Text>
+              <Text style={styles.drawerItemText}>Exgange rate</Text>
             </TouchableOpacity>
           </View>
 
@@ -245,7 +245,7 @@ export default function HomeScreen() {
   if (isLoading) {
     return (
       <ImageBackground
-        source={require('../../assets/images/loginback.webp')}
+        source={require('../../assets/images/back1.webp')}
         style={styles.backgroundImage}
         resizeMode="cover"
       >
@@ -274,7 +274,7 @@ export default function HomeScreen() {
         ]}
       >
         <ImageBackground
-          source={require('../../assets/images/loginback.webp')}
+          source={require('../../assets/images/back3.webp')}
           style={styles.backgroundImage}
           resizeMode="cover"
         >
