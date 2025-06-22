@@ -66,34 +66,44 @@ export default function CardManagementScreen() {
             <Text style={styles.errorText}>{error}</Text>
           ) : (
             <View style={styles.cardsList}>
-              {cards.map((card) => (
-                <View key={card.card} style={styles.cardBox}>
-                  <View style={styles.cardRow}>
-                    <Ionicons name="card-outline" size={32} color={colors.primary} style={{ marginRight: 12 }} />
-                    <View style={{ flex: 1 }}>
-                      <Text style={styles.cardPan}>{card.pan}</Text>
-                      <Text style={styles.cardType}>{card.card_type}</Text>
+              {cards.map((card, idx) => {
+                const isLast = idx === cards.length - 1;
+                const isProcessing = processing[card.card];
+                const isActive = card.status === 'ACTIVE';
+                const buttonEnabled = isLast ? !isProcessing : (isActive && !isProcessing);
+                const buttonStyle = [
+                  styles.actionButton,
+                  (!buttonEnabled || isProcessing) && styles.disabledButton
+                ];
+                return (
+                  <View key={card.card} style={styles.cardBox}>
+                    <View style={styles.cardRow}>
+                      <Ionicons name="card-outline" size={32} color={colors.primary} style={{ marginRight: 12 }} />
+                      <View style={{ flex: 1 }}>
+                        <Text style={styles.cardPan}>{card.pan}</Text>
+                        <Text style={styles.cardType}>{card.card_type}</Text>
+                      </View>
+                      <Text style={[styles.cardStatus, { color: isActive ? colors.status.success : colors.status.error }]}> 
+                        {isActive ? 'Activated' : 'Deactivated'}
+                      </Text>
                     </View>
-                    <Text style={[styles.cardStatus, { color: card.status === 'ACTIVE' ? colors.status.success : colors.status.error }]}> 
-                      {card.status === 'ACTIVE' ? 'Activated' : 'Deactivated'}
-                    </Text>
+                    <View style={styles.cardDetailsRow}>
+                      <Text style={styles.cardLabel}>Name:</Text>
+                      <Text style={styles.cardValue}>{card.name_on_card}</Text>
+                      <Text style={styles.cardLabel}>Expiry:</Text>
+                      <Text style={styles.cardValue}>{card.expiry_date}</Text>
+                    </View>
+                    <TouchableOpacity
+                      style={buttonStyle}
+                      onPress={() => handleDeclareMissing(card)}
+                      disabled={!buttonEnabled}
+                    >
+                      <Ionicons name="alert-circle" size={20} color={colors.white} />
+                      <Text style={styles.actionButtonText}>I miss my card</Text>
+                    </TouchableOpacity>
                   </View>
-                  <View style={styles.cardDetailsRow}>
-                    <Text style={styles.cardLabel}>Name:</Text>
-                    <Text style={styles.cardValue}>{card.name_on_card}</Text>
-                    <Text style={styles.cardLabel}>Expiry:</Text>
-                    <Text style={styles.cardValue}>{card.expiry_date}</Text>
-                  </View>
-                  <TouchableOpacity
-                    style={[styles.actionButton, card.status !== 'ACTIVE' && styles.disabledButton]}
-                    onPress={() => handleDeclareMissing(card)}
-                    disabled={card.status !== 'ACTIVE' || processing[card.card]}
-                  >
-                    <Ionicons name="alert-circle" size={20} color={colors.white} />
-                    <Text style={styles.actionButtonText}>I miss my card</Text>
-                  </TouchableOpacity>
-                </View>
-              ))}
+                );
+              })}
             </View>
           )}
         </View>

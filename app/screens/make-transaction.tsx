@@ -40,10 +40,10 @@ export default function MakeTransactionScreen() {
       return;
     }
 
-    if (accountNumber.length !== 14) {
+    if (accountNumber.length !== 16) {
       setConfirmationType('error');
       setConfirmationMessage('Invalid Account Number');
-      setConfirmationSubMessage('Please enter a valid 14-digit account number');
+      setConfirmationSubMessage('Please enter a valid 16-digit account number');
       setShowConfirmation(true);
       return;
     }
@@ -139,12 +139,12 @@ export default function MakeTransactionScreen() {
               <Ionicons name="card-outline" size={24} color={colors.gray[300]} style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
-                placeholder="Enter 14-digit account number"
+                placeholder="Enter 16-digit account number"
                 placeholderTextColor={colors.gray[400]}
                 keyboardType="numeric"
                 value={accountNumber}
-                onChangeText={(text) => setAccountNumber(text.replace(/[^0-9]/g, '').slice(0, 14))}
-                maxLength={14}
+                onChangeText={(text) => setAccountNumber(text.replace(/[^0-9]/g, '').slice(0, 16))}
+                maxLength={16}
               />
             </View>
           </View>

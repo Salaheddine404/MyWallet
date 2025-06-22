@@ -24,7 +24,7 @@ export const useTransactionStore = create<TransactionStore>((set) => ({
   updateBalance: (amount) => set((state) => ({ balance: state.balance - amount })),
   addTransaction: (transaction) => set((state) => {
     // Validate account number
-    if (!transaction.accountNumber || transaction.accountNumber.length !== 14) {
+    if (!transaction.accountNumber || transaction.accountNumber.length !== 16) {
       return state; // Don't add transaction if account number is invalid
     }
 
@@ -50,3 +50,12 @@ export const useTransactionStore = create<TransactionStore>((set) => ({
     };
   }),
 })); 
+
+
+
+
+
+
+
+
+

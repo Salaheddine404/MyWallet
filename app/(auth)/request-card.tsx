@@ -72,9 +72,15 @@ export default function RequestCardScreen() {
     } else if (field === 'month' && numericValue.length > 0) {
       const num = parseInt(numericValue);
       validatedValue = Math.min(Math.max(num, 1), 12).toString();
-    } else if (field === 'year' && numericValue.length > 0) {
+    } else if (field === 'year') {
+      // For year, just ensure it's a valid number and not in the future
+      const currentYear = new Date().getFullYear();
       const num = parseInt(numericValue);
-      validatedValue = Math.min(Math.max(num, 1900), new Date().getFullYear()).toString();
+      if (num > currentYear) {
+        validatedValue = currentYear.toString();
+      } else {
+        validatedValue = numericValue;
+      }
     }
 
     setDateInputs(prev => {
@@ -83,10 +89,10 @@ export default function RequestCardScreen() {
       // Update formData when all fields are filled
       if (newInputs.day && newInputs.month && newInputs.year) {
         const formattedDate = `${newInputs.day.padStart(2, '0')}/${newInputs.month.padStart(2, '0')}/${newInputs.year}`;
-        setFormData({
-          ...formData,
-          initiator: { ...formData.initiator, birthdate: formattedDate }
-        });
+        setFormData(prev => ({
+          ...prev,
+          initiator: { ...prev.initiator, birthdate: formattedDate }
+        }));
       }
       
       return newInputs;

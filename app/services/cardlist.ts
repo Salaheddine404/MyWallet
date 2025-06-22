@@ -24,7 +24,7 @@ const MOCK_CARDS: Card[] = [
     pan: "4532********7890",
     name_on_card: "SAAID TALIBI",
     status: "ACTIVE",
-    expiry_date: "12/25",
+    expiry_date: "06/26",
     card_type: "VISA"
   },
   {
@@ -32,7 +32,7 @@ const MOCK_CARDS: Card[] = [
     pan: "5248********4567",
     name_on_card: "SAAID TALIBI",
     status: "ACTIVE",
-    expiry_date: "09/24",
+    expiry_date: "21/28",
     card_type: "MASTERCARD"
   },
   {
@@ -40,7 +40,7 @@ const MOCK_CARDS: Card[] = [
     pan: "6011********8901",
     name_on_card: "SAAID TALIBI",
     status: "INACTIVE",
-    expiry_date: "03/26",
+    expiry_date: "02/28",
     card_type: "VISA"
   }
 ];

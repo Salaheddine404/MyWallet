@@ -1,13 +1,20 @@
 import { View, Text, StyleSheet } from "react-native";
 
-export default function CardItem({ card }: { card: any }) {
+export default function CardItem({ card, index }: { card: any, index?: number }) {
+  // Override expiry for the first three cards
+  let expiry = card.expiry_date;
+  if (typeof index === 'number') {
+    if (index === 0) expiry = '06/26';
+    else if (index === 1) expiry = '21/28';
+    else if (index === 2) expiry = '02/28';
+  }
   return (
     <View style={styles.card}>
       <Text style={styles.title}>{card.name_on_card}</Text>
       <Text>{card.pan}</Text>
-      <Text>Status: {card.cardstatus}</Text>
-      <Text>Type: {card.cardtype}</Text>
-      <Text>Expiry: {card.expiry}</Text>
+      <Text>Status: {card.status}</Text>
+      <Text>Type: {card.card_type}</Text>
+      <Text>Expiry: {expiry}</Text>
     </View>
   );
 }

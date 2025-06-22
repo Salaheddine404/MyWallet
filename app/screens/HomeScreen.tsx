@@ -83,7 +83,7 @@ export default function HomeScreen() {
           <FlatList
             data={cards}
             keyExtractor={(item) => item.card.toString()}
-            renderItem={({ item }) => <CardItem card={item} />}
+            renderItem={({ item, index }) => <CardItem card={item} index={index} />}
             ListEmptyComponent={
               <View style={styles.centerContainer}>
                 <Text style={styles.emptyText}>No cards available</Text>
